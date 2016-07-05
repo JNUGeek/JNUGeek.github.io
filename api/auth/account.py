@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'创建新用户'
+"""创建新用户"""
 
 import re
 
@@ -27,7 +27,7 @@ class Account(restful.Resource):
         parser.add_argument('phone', type=phone_type)
         parser.add_argument('passwd', type=md5_hashed_type)
 
-        args = parser.parse_args() # 存放参数
+        args = parser.parse_args() # 自动获取响应的数据
 
         new_account = models.Account( # 存放密码
                 passwd = args['passwd'],

@@ -6,7 +6,7 @@ _login_manager = None
 
 from flask import current_app
 
-def get_app():
+def get_app(): # 访问模板
     global _app
 
     if not _app:
@@ -18,7 +18,7 @@ def get_app():
 
     return _app
 
-def get_db():
+def get_db(): # 访问数据库
     global _db
 
     if not _db:
@@ -29,7 +29,7 @@ def get_db():
 
     return _db
 
-def get_login_manager():
+def get_login_manager(): # 访问登录管理
     global _login_manager
 
     if not _login_manager:
@@ -43,7 +43,7 @@ def get_login_manager():
 ################################################################################
 # Initialization Items
 
-def init_global_variables():
+def init_global_variables(): # 初始化数据库和登录管理
     from flask import g
     from werkzeug.local import LocalProxy
 
@@ -51,13 +51,13 @@ def init_global_variables():
     g.login_manager = LocalProxy(get_login_manager)
 
 
-def init_session_interface():
+def init_session_interface(): # 初始化数据库会话接口
     from .utils import DatabaseSessionInterface
     from .models import Session
 
     current_app.session_interface = DatabaseSessionInterface(get_db(), Session)
 
-def init_user_loader():
+def init_user_loader(): # 初始化用户连接
     from .models import Account
 
     _lm = get_login_manager()
@@ -66,7 +66,7 @@ def init_user_loader():
     def load_user(uid):
         return get_db().session.query(Account).get(uid)
 
-def init_app():
+def init_app(): # 初始化app
     # we still need those global varibales during request
     import os
     import api

@@ -32,13 +32,13 @@ class UserInfo(restful.Resource):
 
         for info in args.keys(): # 把信息放到参数里
             if not args[info]: continue # 如果有就不管
-            setattr(user_info, info, args[info]) # 没有就放进去
+            setattr(user_info, info, args[info]) # 没有就放进去即user_info.info = args[info]
 
         g.db.session.commit() #提交
 
         return { "uid": user_info.uid }
 
-    def get(self):
+    def get(self): # 获取用户信息
         parser = reqparse.RequestParser()
         parser.add_argument('uid', type=str)
         parser.add_argument('info', type=str, action='append', required=True)
@@ -50,7 +50,7 @@ class UserInfo(restful.Resource):
             else:
                 raise UserInfoNotFound("UID is not provided")
 
-        user_info = models.UserInfo.query.get(args['uid']) # 把uid参数加入到用户信息中
+        user_info = models.UserInfo.query.get(args['uid']) # 从数据库中获取用户信息
         if not user_info:
             raise UserInfoNotFound("This user hasn't provided any information")
 
@@ -59,7 +59,7 @@ class UserInfo(restful.Resource):
         for info in args["info"]:
             if info not in [ 'student_id', 'department',
                     'school', 'introduction' ]: continue
-            result[info] = getattr(user_info, info) # 用户信息放到result中
+            result[info] = getattr(user_info, info) # 用户信息放到result中即result[info] = user_info.info
 
         return result
 
