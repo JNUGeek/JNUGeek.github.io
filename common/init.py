@@ -3,10 +3,12 @@
 _app = None
 _db = None
 _login_manager = None
+_mail = None
 
 from flask import current_app
 
-def get_app(): # 访问模板
+
+def get_app():  # 初始化app
     global _app
 
     if not _app:
@@ -18,7 +20,8 @@ def get_app(): # 访问模板
 
     return _app
 
-def get_db(): # 访问数据库
+
+def get_db():  # 初始化数据库
     global _db
 
     if not _db:
@@ -29,7 +32,8 @@ def get_db(): # 访问数据库
 
     return _db
 
-def get_login_manager(): # 访问登录管理
+
+def get_login_manager():  # 初始化LoginManger
     global _login_manager
 
     if not _login_manager:
@@ -40,24 +44,39 @@ def get_login_manager(): # 访问登录管理
 
     return _login_manager
 
+
+def get_mail():  # 初始化邮件
+    global _mail
+
+    if not _mail:
+        from flask_mail import Mail
+
+        _mail = Mail(current_app)
+        _mail.init_app(current_app)
+
+    return _mail
+
 ################################################################################
 # Initialization Items
 
-def init_global_variables(): # 初始化数据库和登录管理
+
+def init_global_variables():
     from flask import g
     from werkzeug.local import LocalProxy
 
     g.db = LocalProxy(get_db)
     g.login_manager = LocalProxy(get_login_manager)
+    g.mail = LocalProxy(get_mail)
 
 
-def init_session_interface(): # 初始化数据库会话接口
+def init_session_interface():
     from .utils import DatabaseSessionInterface
     from .models import Session
 
     current_app.session_interface = DatabaseSessionInterface(get_db(), Session)
 
-def init_user_loader(): # 初始化用户连接
+
+def init_user_loader():
     from .models import Account
 
     _lm = get_login_manager()
@@ -66,8 +85,9 @@ def init_user_loader(): # 初始化用户连接
     def load_user(uid):
         return get_db().session.query(Account).get(uid)
 
-def init_app(): # 初始化app
-    # we still need those global varibales during request
+
+def init_app():  # 初始化app
+    # we still need those global variables during request
     import os
     import api
     import json
@@ -94,11 +114,12 @@ def init_app(): # 初始化app
     current_app.register_blueprint(api.get_blueprint(), url_prefix="/api")
 
 ################################################################################
-# Intialize an app in this way:
+# Initialize an app in this way:
 #
 #   app = init.get_app()
 #   with app.app_context():
 #       init.init_everything()
+
 
 def init_everything():
     init_global_variables()

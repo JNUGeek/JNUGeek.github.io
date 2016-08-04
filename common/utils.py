@@ -2,6 +2,7 @@ import os, re
 
 from flask import Blueprint
 
+
 def find_modules(init_file, fpattern = None):
     """
     List names of modules in the same directory as init_file. The function is
@@ -21,6 +22,7 @@ def find_modules(init_file, fpattern = None):
 
     return entries
 
+
 def get_entries(init_file, glb):
     _entries = []
 
@@ -30,6 +32,7 @@ def get_entries(init_file, glb):
             _entries.append((modname, mod.Entry))
 
     return _entries
+
 
 def join_url(*args, **kwargs):
     """
@@ -57,17 +60,20 @@ def join_url(*args, **kwargs):
 ################################################################################
 # Request Argument Conversion and Validation
 
+
 def email_type(email_str):
     if re.match("^[^@]+@[a-zA-Z0-9\-_\.]+$", email_str):
         return email_str
     else:
         raise ValueError("Not a Proper Email.")
 
+
 def phone_type(phone_str):
     if re.match("^\d+$", phone_str):
         return phone_str
     else:
         raise ValueError("Not a Proper Phone Number.")
+
 
 def md5_hashed_type(mhstr):
     if re.match("(^$)|(^[a-zA-Z0-9]{32}$)", mhstr):
@@ -84,6 +90,7 @@ import uuid
 from werkzeug.datastructures import CallbackDict
 from flask.sessions import SessionInterface, SessionMixin
 
+
 class DatabaseSession(CallbackDict, SessionMixin):
     @staticmethod
     def _update(self):
@@ -98,6 +105,7 @@ class DatabaseSession(CallbackDict, SessionMixin):
     @staticmethod
     def get_session_id():
         return str(uuid.uuid4())
+
 
 class DatabaseSessionInterface(SessionInterface):
     serializer = lambda s, d: pickle.dumps(d, protocol=2)
@@ -167,6 +175,7 @@ class DatabaseSessionInterface(SessionInterface):
 import json
 import unittest
 
+
 def test_context(func):
     from flask import current_app
 
@@ -184,6 +193,7 @@ def test_context(func):
     return wrapper
 
 whole_record = {}
+
 
 class ApiTest(unittest.TestCase):
 

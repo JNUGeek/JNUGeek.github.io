@@ -5,6 +5,7 @@ db = g.db
 import datetime
 import uuid
 
+
 class Session(db.Model):
     __tablename__ = current_app.config["TABLE_PREFIX"] + 'session'
 

@@ -20,6 +20,7 @@ from common.error import (
         PasswordIncorrect,
     )
 
+
 class Login(restful.Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -28,34 +29,35 @@ class Login(restful.Resource):
         parser.add_argument('email', type=email_type)
         parser.add_argument('phone', type=phone_type)
         parser.add_argument('passwd', type=md5_hashed_type, default="")
+        parser.add_argument('remember_me', type=bool, default=False)
         args = parser.parse_args()
 
         account = None
 
-        if args['uid']: # 如果有uid,也就是用户名
+        if args['uid']:  # 如果有uid,也就是用户名
             account = Account.query.get(args['uid']) # 从数据库获取账户信息
         else:
             # 如果有name就创建name类型,没有name就创建email以此类推
             # 任意一种都可以当作用户名
             cred_type = \
-                'name'  if args['name' ] else \
+                'name' if args['name'] else \
                 'email' if args['email'] else \
-                'phone' if args['phone'] else '' # \是用来防止判断条件这一行过长
+                'phone' if args['phone'] else ''  # \是用来防止判断条件这一行过长
             cred = Credential.query.get(
-                    (cred_type, args[cred_type])) # 从数据库获取这些信息
+                    (cred_type, args[cred_type]))  # 从数据库获取这些信息
             if not cred.account:
                 raise CredentialNotFound(cred_type, args[cred_type])
-            account = cred.account # 存放个人信息
+            account = cred.account  # 存放个人信息
 
         if not account:
             raise AtLeastOneOfArguments(['uid', 'name', 'email', 'phone'])
 
-        if account.passwd.lower() != args['passwd'].lower(): # 检查密码对不对
+        if account.passwd.lower() != args['passwd'].lower():  # 检查密码对不对
             raise PasswordIncorrect()
 
-        login.login_user(account) # 这里是让用户登录
+        login.login_user(account, remember=args['remember_me']) # 这里是让用户登录
 
-        return { "uid": account.uid }
+        return {"uid": account.uid}
 
 Entry = Login
 
