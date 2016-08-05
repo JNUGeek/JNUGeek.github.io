@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'查看,增加用户信息'
+"""查看,增加用户信息"""
 
 import flask_restful as restful
 import flask_login as login
@@ -52,15 +52,15 @@ class UserInfo(restful.Resource):
             else:
                 raise UserInfoNotFound("UID is not provided")
 
-        user_info = models.UserInfo.query.get(args['uid']) # 从数据库中获取用户信息
+        user_info = models.UserInfo.query.get(args['uid'])  # 从数据库中获取用户信息
         if not user_info:
             raise UserInfoNotFound("This user hasn't provided any information")
 
         result = {}
 
         for info in args["info"]:
-            if info not in ['student_id', 'department',
-                            'school', 'introduction']:
+            if info not in ['student_id', 'grade', 'department',
+                            'school', 'major', 'qq', 'introduction']:
                 continue
             result[info] = getattr(user_info, info)  # 用户信息放到result中即result[info] = user_info.info
 

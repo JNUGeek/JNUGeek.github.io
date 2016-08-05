@@ -55,8 +55,11 @@ class UserInfo(db.Model): # 用户信息,学号部门之类的
 
     uid = db.Column(db.String(36), db.ForeignKey(Account.uid), primary_key=True)
     student_id = db.Column(db.Integer)
+    grade = db.Column(db.String(64))
     department = db.Column(db.String(128))
     school = db.Column(db.String(128))
+    major = db.Column(db.String(128))
+    qq = db.Column(db.String(64))
     introduction = db.Column(db.Text)
 
     account = db.relationship(Account,
@@ -78,4 +81,14 @@ class Applications(db.Model):
     admission = db.Column(db.Bool, default=False)
 
 
+class Timetable(db.Model):
+    __talbename__ = current_app.config["TABLE_PREFIX"] + 'timetable'
 
+    cls = db.Column(db.Integer, primary_key=True)
+    mon = db.Column(db.Bool, default=False)
+    tue = db.Column(db.Bool, default=False)
+    wed = db.Column(db.Bool, default=False)
+    thur = db.Column(db.Bool, default=False)
+    fri = db.Column(db.Bool, default=False)
+    sat = db.Column(db.Bool, default=False)
+    sun = db.Column(db.Bool, default=False)
