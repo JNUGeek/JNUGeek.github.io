@@ -92,3 +92,27 @@ class Timetable(db.Model):
     fri = db.Column(db.Bool, default=False)
     sat = db.Column(db.Bool, default=False)
     sun = db.Column(db.Bool, default=False)
+
+
+class Notification(db.Model):
+    __talbename__ = current_app.config["TABLE_PREFIX"] + 'notification'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128))
+    department = db.Column(db.String(128))
+    uid = db.Column(db.String(36))
+    content = db.Column(db.Text)
+    cred_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+
+class Mission(db.Model):
+    __talbename__ = current_app.config["TABLE_PREFIX"] + 'mission'
+
+    id = db.Column(db.Integer, primary_key=True)
+    act_name = db.Column(db.String(64))
+    act_date = db.Column(db.String(64))
+    uid = db.Column(db.String(36))
+    act_content = db.Column(db.Text)
+    remarks = db.Column(db.Text)
+    cred_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    end = db.Column(db.Bool, default=False)

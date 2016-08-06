@@ -12,6 +12,9 @@ from common.utils import (
         phone_type
     )
 import common.models as models
+from common.error import (
+        UserInfoNotFound
+    )
 
 
 class Application(restful.Resource):
@@ -39,5 +42,22 @@ class Application(restful.Resource):
         g.db.session.flush()
 
         return {'id': new_applicant.id}
+
+    def get(self):
+        application = models.Applications.query.get()
+        if application is None:
+            raise UserInfoNotFound("No new applications")
+
+        applicant = {}
+        result = {}
+        for user in application:
+            for info in ['name', 'student_id', 'grade', 'department',
+                         'school', 'major', 'qq', 'introduction']:
+                if user.info is None:
+                    application[info] = None
+                applicant[info] = getattr(user, info)
+            result[user.id] = applicant
+
+        return result
 
 Entry = Application

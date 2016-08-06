@@ -16,6 +16,7 @@ from flask import g, current_app
 
 registered_command = {}
 
+
 def as_command(arg=""):
 
     def reg(func):
@@ -49,9 +50,11 @@ Output Data:
 ```
 """
 
+
 @as_command()
 def run(port=5000):
     current_app.run(port=port, debug=True)
+
 
 @as_command()
 def test(dbecho=False, record=""):
@@ -79,6 +82,7 @@ def test(dbecho=False, record=""):
                     record_file.write(_RECORD_STR.format(**section))
         record_file.close()
 
+
 @as_command()
 def initdb(drop=False):
     import common.models
@@ -87,6 +91,7 @@ def initdb(drop=False):
         g.db.create_all()
     else:
         g.db.drop_all()
+
 
 @as_command()
 def help(func=None):
@@ -104,6 +109,7 @@ def help(func=None):
                 print("    --%s\t\t(default: %s)" % (k, repr(d)))
 
 ################################################################################
+
 
 def parse_arguments(arg_list):
     args = []
@@ -130,6 +136,7 @@ def parse_arguments(arg_list):
 
     return args, kwargs
 
+
 def run_command():
     if len(sys.argv) == 1:
         sys.argv += ['help']
@@ -141,6 +148,7 @@ def run_command():
     else:
         print("No such command. Run ./admin.py help for more information.")
         exit(255)
+
 
 def __main__():
     import common.init

@@ -3,7 +3,9 @@ from .user import (
         Credential,
         UserInfo,
         Applications,
-        Timetable
+        Timetable,
+        Notification,
+        Mission
     )
 
 from .misc import Session

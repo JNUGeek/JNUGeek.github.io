@@ -43,6 +43,18 @@ class Timetable(restful.Resource):
         g.db.session.commit()
 
     def get(self):
-        pass
+        timetable = models.Timetable.query.get()
+
+        result = {}
+        for i in range(0, 7):
+            result[i] = [timetable[i].mon,
+                         timetable[i].tue,
+                         timetable[i].wed,
+                         timetable[i].thur,
+                         timetable[i].fri,
+                         timetable[i].sat,
+                         timetable[i].sun]
+
+        return result
 
 Entry = Timetable
