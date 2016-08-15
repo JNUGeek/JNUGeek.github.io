@@ -14,12 +14,12 @@ from common.error import (
 
 class Admission(restful.Resource):
     def get(self):
-        parser = reqparse.RequestParser()  # 创建了请求解析对象
+        parser = reqparse.RequestParser()
         parser.add_argument('student_id', type=int)
 
-        args = parser.parse_args()  # 自动获取响应的数据
+        args = parser.parse_args()
 
-        admission_info = models.Applications.query.get(args['student_id'])  # 从数据库中获取用户信息
+        admission_info = models.Applications.query.get(args['student_id'])
         if not admission_info:
             raise AdmissionInfoNotFound("This student id hasn't provided any information")
 

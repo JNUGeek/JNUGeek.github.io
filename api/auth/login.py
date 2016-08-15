@@ -35,7 +35,7 @@ class Login(restful.Resource):
         account = None
 
         if args['uid']:  # 如果有uid,也就是用户名
-            account = Account.query.get(args['uid']) # 从数据库获取账户信息
+            account = Account.query.get(args['uid'])
         else:
             # 如果有name就创建name类型,没有name就创建email以此类推
             # 任意一种都可以当作用户名
@@ -44,7 +44,7 @@ class Login(restful.Resource):
                 'email' if args['email'] else \
                 'phone' if args['phone'] else ''  # \是用来防止判断条件这一行过长
             cred = Credential.query.get(
-                    (cred_type, args[cred_type]))  # 从数据库获取这些信息
+                    (cred_type, args[cred_type]))
             if not cred.account:
                 raise CredentialNotFound(cred_type, args[cred_type])
             account = cred.account  # 存放个人信息

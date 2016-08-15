@@ -19,7 +19,7 @@ class GetNoti(restful.Resource):
     def get(self):
 
         notification = models.Notification.query.filter_by\
-        (uid=login.current_user.uid).order_by(models.Notification.cred_at).add()
+         (uid=login.current_user.uid).order_by(models.Notification.cred_at).add()
         if notification is None:
             raise UserInfoNotFound("No notifications posted.")
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""游客预报名"""
+"""游客预报名,管理员查看预报名"""
 
 
 import flask_restful as restful
@@ -19,8 +19,8 @@ from common.error import (
 
 class Application(restful.Resource):
     def post(self):
-        parser = reqparse.RequestParser()  # 创建了请求解析对象
-        parser.add_argument('name', required=True)  # 把参数都加入进入
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', required=True)
         parser.add_argument('student_id', type=int)
         parser.add_argument('grade', type=str)
         parser.add_argument('school', type=str)
@@ -54,7 +54,7 @@ class Application(restful.Resource):
             for info in ['name', 'student_id', 'grade', 'department',
                          'school', 'major', 'qq', 'introduction']:
                 if user.info is None:
-                    application[info] = None
+                    applicant[info] = None
                 applicant[info] = getattr(user, info)
             result[user.id] = applicant
 

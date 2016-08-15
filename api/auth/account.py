@@ -19,28 +19,28 @@ import common.models as models
 
 class Account(restful.Resource):
     def post(self):
-        parser = reqparse.RequestParser()  # 创建了请求解析对象
-        parser.add_argument('name', required=True)  # 把参数都加入进入
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', required=True)
         parser.add_argument('email', type=email_type)
         parser.add_argument('phone', type=phone_type)
         parser.add_argument('passwd', type=md5_hashed_type)
 
-        args = parser.parse_args()  # 自动获取响应的数据
+        args = parser.parse_args()
 
-        new_account = models.Account(  # 存放密码
+        new_account = models.Account(
                 passwd=args['passwd'],
             )
-        g.db.session.add(new_account)  # 放到数据库
+        g.db.session.add(new_account)
         g.db.session.flush() # 刷新数据库
 
-        new_username = models.Credential(  # 存放用户名
+        new_username = models.Credential(
                 cred_type='name',  # 类型
-                cred_value=args['name'],  # 名字
-                uid=new_account.uid  # uid和Account类中的是相同
+                cred_value=args['name'],
+                uid=new_account.uid
             )
-        g.db.session.add(new_username)  # 存到数据库
+        g.db.session.add(new_username)
 
-        if args['email']:  # 如果填写了邮箱,把邮箱也存进去
+        if args['email']:
             new_email = models.Credential(
                     cred_type='email',
                     cred_value=args['email'],
@@ -48,7 +48,7 @@ class Account(restful.Resource):
                 )
             g.db.session.add(new_email)
 
-        if args['phone']:  # 如果填写了手机号,把手机号也存进去
+        if args['phone']:
             new_phone = models.Credential(
                     cred_type='phone',
                     cred_value=args['phone'],
@@ -57,11 +57,11 @@ class Account(restful.Resource):
             g.db.session.add(new_phone)
 
         try:
-            g.db.session.commit()  # 把改动提交
+            g.db.session.commit()
         except IntegrityError:
             raise AccountAlreadyExists()
 
-        return {'uid': new_account.uid}  # 返回一个含有uid的dict
+        return {'uid': new_account.uid}
 
 Entry = Account
 

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-'实现登出'
+"""实现登出"""
 
 import flask_restful as restful
 import flask_login as login
 
 from flask import session
+
 
 class Logout(restful.Resource):
 
@@ -15,7 +16,7 @@ class Logout(restful.Resource):
                 if login.current_user.is_authenticated else None
 
         login.logout_user()
-        return { "uid": uid }
+        return {"uid": uid}
 
 Entry = Logout
 

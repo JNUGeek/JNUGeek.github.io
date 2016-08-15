@@ -26,33 +26,33 @@ class UserInfo(restful.Resource):
         parser.add_argument('introduction', type=str)
         args = parser.parse_args()
 
-        user_info = login.current_user.user_info  # 绑定用户属性到当前用户上
-        if not user_info:  # 如果没有用户信息
-            user_info = models.UserInfo(uid=login.current_user.uid)  # 创建一个用户信息对象
-            g.db.session.add(user_info)  # 加到数据库
+        user_info = login.current_user.user_info
+        if not user_info:
+            user_info = models.UserInfo(uid=login.current_user.uid)
+            g.db.session.add(user_info)
 
-        for info in args.keys():  # 把信息放到参数里
+        for info in args.keys():
             if not args[info]:
-                continue  # 如果有就不管
+                continue
             setattr(user_info, info, args[info])  # 没有就放进去即user_info.info = args[info]
 
         g.db.session.commit()  # 提交
 
         return {"uid": user_info.uid}
 
-    def get(self):  # 获取用户信息
+    def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('uid', type=str)
         parser.add_argument('info', type=str, action='append', required=True)
         args = parser.parse_args()
 
-        if 'uid' not in args or not args['uid']:  # 参数中没有uid
-            if login.current_user.is_authenticated:  # 该用户已登录
-                args['uid'] = login.current_user.uid  # uid加到参数中
+        if 'uid' not in args or not args['uid']:
+            if login.current_user.is_authenticated:
+                args['uid'] = login.current_user.uid
             else:
                 raise UserInfoNotFound("UID is not provided")
 
-        user_info = models.UserInfo.query.get(args['uid'])  # 从数据库中获取用户信息
+        user_info = models.UserInfo.query.get(args['uid'])
         if not user_info:
             raise UserInfoNotFound("This user hasn't provided any information")
 

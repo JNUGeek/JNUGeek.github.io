@@ -22,7 +22,7 @@ class Notify(restful.Resource):
         parser.add_argument('uid', type=str, required=True)
         parser.add_argument('content', type=str, required=True)
 
-        args = parser.parse_args()  # 自动获取响应的数据
+        args = parser.parse_args()
 
         new_notification = models.Notification()
         for info in args.keys():

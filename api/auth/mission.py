@@ -19,13 +19,14 @@ class Mission(restful.Resource):
     def post(self):
         parser = reqparse.RequestParser()
         # 这里只考虑了一行的情况,实际情况可能有多行,有点问题
+        # 去问问志平吧
         parser.add_argument('act_name', type=str, required=True)
         parser.add_argument('act_date', type=str, required=True)
         parser.add_argument('uid', type=str, required=True)
         parser.add_argument('act_content', type=str, required=True)
         parser.add_argument('remarks', type=str, default='')
 
-        args = parser.parse_args()  # 自动获取响应的数据
+        args = parser.parse_args()
 
         new_mission = models.Mission()
         for info in args.keys():
