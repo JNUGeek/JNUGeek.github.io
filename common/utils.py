@@ -153,20 +153,20 @@ class DatabaseSessionInterface(SessionInterface):
             session_record.expiry = expiry
         else:
             session_record = self.session_table(
-                    sid = sid,
-                    data = data,
-                    expiry = expiry
+                    sid=sid,
+                    data=data,
+                    expiry=expiry
                 )
             self.db.session.add(session_record)
 
         self.db.session.commit()
 
         response.set_cookie(current_app.session_cookie_name, sid,
-                expires = expiry,
-                domain = domain,
-                path = path,
-                httponly = httponly,
-                secure = secure
+                            expires=expiry,
+                            domain=domain,
+                            path=path,
+                            httponly=httponly,
+                            secure=secure
             )
 
 ################################################################################
@@ -256,11 +256,11 @@ class ApiTest(unittest.TestCase):
             indata = kwargs['data']
 
         self.record_requests(
-                method = method.upper(),
-                url = kwargs['path'],
-                view = view,
-                indata = indata,
-                response = resp
+                method=method.upper(),
+                url=kwargs['path'],
+                view=view,
+                indata=indata,
+                response=resp
             )
 
         return resp

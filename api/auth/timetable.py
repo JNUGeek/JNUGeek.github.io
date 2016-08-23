@@ -11,33 +11,28 @@ import common.models as models
 
 
 class Timetable(restful.Resource):
-    """Get contacts."""
     @login.login_required
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('timetable', type=bool, action='append')
+        parser.add_argument('timetable', type=bool, action='append')  # timetable是一个list中有list的复杂的list
         args = parser.parse_args()
 
         tt = models.Timetable.query.get()
         if tt is None:
-            tt = models.Timetable()
+            table = models.Timetable()
             tt = models.Timetable.query.get()
 
-        for day in tt:
-            if args['timetable'][0] is True:
-                day.mon = args['timetable'][0]
-            if args['timetable'][1] is True:
-                day.tue = args['timetable'][1]
-            if args['timetable'][2] is True:
-                day.wed = args['timetable'][2]
-            if args['timetable'][3] is True:
-                day.thur = args['timetable'][3]
-            if args['timetable'][4] is True:
-                day.fri = args['timetable'][4]
-            if args['timetable'][5] is True:
-                day.sat = args['timetable'][5]
-            if args['timetable'][6] is True:
-                day.sun = args['timetable'][6]
+        number = []
+        for num in range(10):
+            number.append(num)
+
+        for (i, cls) in zip(number, tt):
+            j = 0
+            for day in ['mon', 'tue', 'wed',
+                        'thur', 'fri', 'sat', 'sun']:
+                if args['timetable'][i][j] is True:
+                    setattr(cls, day, args['timetable'][i][j])
+                j += 1
 
         g.db.session.add(tt)
         g.db.session.commit()
@@ -46,15 +41,17 @@ class Timetable(restful.Resource):
         timetable = models.Timetable.query.get()
 
         result = {}
-        for i in range(0, 7):
-            result[i] = [timetable[i].mon,
-                         timetable[i].tue,
-                         timetable[i].wed,
-                         timetable[i].thur,
-                         timetable[i].fri,
-                         timetable[i].sat,
-                         timetable[i].sun]
+        number = []
+        for num in range(10):
+            number.append(num)
 
-        return result
+        for (i, cls) in zip(number, timetable):
+            j = 0
+            for day in ['mon', 'tue', 'wed',
+                        'thur', 'fri', 'sat', 'sun']:
+                result['timetable'][i][j] = getattr(cls, day)
+                j += 1
+
+        return result  # result里面的timetable对应的value也和上面的相同形式
 
 Entry = Timetable

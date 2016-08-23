@@ -4,11 +4,11 @@ from flask import g, current_app
 
 db = g.db
 
-import uuid # UUID 的目的，是让分布式系统中的所有元素，都能有唯一的辨识资讯，而不需要透过中央控制端来做辨识资讯的指定。
+import uuid  # UUID 的目的，是让分布式系统中的所有元素，都能有唯一的辨识资讯，而不需要透过中央控制端来做辨识资讯的指定。
 import datetime
 
 
-class Account(db.Model): # 用户账户,用户名密码之类的
+class Account(db.Model):  # 用户账户,用户名密码之类的
     __tablename__ = current_app.config["TABLE_PREFIX"] + 'account'
 
     uid = db.Column(db.String(36), primary_key=True,
@@ -50,7 +50,7 @@ class Credential(db.Model):
                               back_populates="credentials", uselist=False)
 
 
-class UserInfo(db.Model): # 用户信息,学号部门之类的
+class UserInfo(db.Model):  # 用户信息,学号部门之类的
     __tablename__ = current_app.config["TABLE_PREFIX"] + 'user_info'
 
     uid = db.Column(db.String(36), db.ForeignKey(Account.uid), primary_key=True)
@@ -116,3 +116,18 @@ class Mission(db.Model):
     remarks = db.Column(db.Text)
     cred_at = db.Column(db.DateTime, default=datetime.datetime.now)
     end = db.Column(db.Bool, default=False)
+
+
+class Member(db.Model):
+    __talbename__ = current_app.config["TABLE_PREFIX"] + 'member'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    grade = db.Column(db.String(64))
+    school = db.Column(db.String(128))
+    major = db.Column(db.String(128))
+    phone = db.Column(db.String(64))
+    qq = db.Column(db.String(64))
+    department = db.Column(db.String(128))
+    introduction = db.Column(db.Text)
+    admission = db.Column(db.Bool, default=False)

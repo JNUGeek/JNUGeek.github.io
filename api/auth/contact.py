@@ -16,17 +16,10 @@ from common.error import (
 class Contact(restful.Resource):
     """Get contacts."""
     @login.login_required
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', required=True)
-        args = parser.parse_args()
-
-        return {'name': args['name']}
-
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('name')
-        parser.add_argument('info', type=str, action='append', required=True)
+
         args = parser.parse_args()
 
         if 'name' not in args or not args['name']:

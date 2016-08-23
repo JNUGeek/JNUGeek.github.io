@@ -5,8 +5,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-#if sys.version_info > (2, 7):
-#    warnings.warn("Due to few flask extentions having supported Py3k, "
+# if sys.version_info > (2, 7):
+#    warnings.warn("Due to few flask extensions having supported Py3k, "
 #            "please check carefully if your code is fully compatible.")
 
 # prepend project root path to module search paths

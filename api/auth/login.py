@@ -55,7 +55,7 @@ class Login(restful.Resource):
         if account.passwd.lower() != args['passwd'].lower():  # 检查密码对不对
             raise PasswordIncorrect()
 
-        login.login_user(account, remember=args['remember_me']) # 这里是让用户登录
+        login.login_user(account, remember=args['remember_me'])  # 这里是让用户登录
 
         return {"uid": account.uid}
 

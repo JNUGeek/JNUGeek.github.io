@@ -31,7 +31,7 @@ class Account(restful.Resource):
                 passwd=args['passwd'],
             )
         g.db.session.add(new_account)
-        g.db.session.flush() # 刷新数据库
+        g.db.session.flush()  # 刷新数据库
 
         new_username = models.Credential(
                 cred_type='name',  # 类型

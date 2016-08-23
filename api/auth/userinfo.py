@@ -36,14 +36,14 @@ class UserInfo(restful.Resource):
                 continue
             setattr(user_info, info, args[info])  # 没有就放进去即user_info.info = args[info]
 
-        g.db.session.commit()  # 提交
+        g.db.session.commit()
 
         return {"uid": user_info.uid}
 
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('uid', type=str)
-        parser.add_argument('info', type=str, action='append', required=True)
+        parser.add_argument('info', type=str, action='append', required=True)  # 要请求的参数
         args = parser.parse_args()
 
         if 'uid' not in args or not args['uid']:

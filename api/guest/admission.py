@@ -19,13 +19,14 @@ class Admission(restful.Resource):
 
         args = parser.parse_args()
 
-        admission_info = models.Applications.query.get(args['student_id'])
+        admission_info = models.Applications.query.filter_by(student_id=args['student_id']).first()
         if not admission_info:
-            raise AdmissionInfoNotFound("This student id hasn't provided any information")
+            raise AdmissionInfoNotFound("This student id hasn't applied")
 
-        if admission_info.admission is False:
-            return False
+        admission = admission_info.admission
+        if admission is False:
+            return {admission: False}
 
-        return True
+        return {admission: True}
 
 Entry = Admission

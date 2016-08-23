@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/flask-site-master.iml" filepath="$PROJECT_DIR$/.idea/flask-site-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../jnugeek/.idea/jnugeek.iml" filepath="$PROJECT_DIR$/../jnugeek/.idea/jnugeek.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../superawesome-python3-webapp/.idea/superawesome-python3-webapp.iml" filepath="$PROJECT_DIR$/../superawesome-python3-webapp/.idea/superawesome-python3-webapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../webapp-flask/.idea/webapp-flask.iml" filepath="$PROJECT_DIR$/../webapp-flask/.idea/webapp-flask.iml" />
+    </modules>
+  </component>
+</project>
