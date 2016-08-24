@@ -25,9 +25,14 @@ class GetMn(restful.Resource):
             raise UserInfoNotFound("No missions posted.")
 
         result = {}
+        result['notfin'] = []
+        result['fin'] = []
         for info in ['act_name', 'act_date', 'act_content', 'remarks']:
-            result[info] = getattr(mission, info)
+            if mission.end is None:
+                result['notfin'].append(getattr(mission, info))
+            else:
+                result['fin'].append(getattr(mission, info))
 
-        return result
+        return result  # dict里面有list
 
 Entry = GetMn
