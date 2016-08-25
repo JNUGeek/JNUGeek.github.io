@@ -18,15 +18,19 @@ class GetNoti(restful.Resource):
     @login.login_required
     def get(self):
 
-        notification = models.Notification.query.filter_by\
-         (uid=login.current_user.uid).order_by(models.Notification.cred_at).add()
+        notification = models.NotiMember.query.filter_by\
+         (uid=login.current_user.uid).order_by(models.NotiMember.id).all()
         if notification is None:
             raise UserInfoNotFound("No notifications posted.")
 
         result = {}
-        for info in ['title', 'content']:
-            result[info] = getattr(notification, info)
+        for noti in notification:
+            mn_id = getattr(noti, 'id')
+            result[mn_id] = []
+            nt = models.Notification.query.filter_by(id=mn_id).first()
+            for info in ['title', 'content']:
+                result[info].append(getattr(nt, info))
 
-        return result
+        return result  # dict中包含list
 
 Entry = GetNoti

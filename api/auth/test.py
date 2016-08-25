@@ -19,13 +19,15 @@ for info in args.keys():
 
 x = [1, 2, 3]
 y = [4, 5, 6]
-print(zip(x, y))
-for i in zip(x, y):
+z = [7, 8, 9]
+print(zip(x, y, z))
+for (i, j, k) in zip(x, y, z):
     print(i)
 
 number = []
 for num in range(10):
     number.append(num)
 print(number)
+
 
 

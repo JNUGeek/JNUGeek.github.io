@@ -31,7 +31,7 @@ class Member(restful.Resource):
         args = parser.parse_args()
 
         new_account = models.Account(
-                passwd=args['student_id'],
+                passwd=args['student_id'],  # 学号是默认密码
             )
         g.db.session.add(new_account)
         g.db.session.flush()
@@ -66,6 +66,7 @@ class Member(restful.Resource):
         return {'uid': new_account.uid}
 
     def get(self):
+
         users = models.Account.query.get()
         if users is None:
             raise UserInfoNotFound("No member exists")
@@ -78,7 +79,7 @@ class Member(restful.Resource):
                 if member.cred_type is None:
                     members[info] = None
                 members[info] = member.cred_value
-            result[user.id] = members
+
         for user in users:
             member_info = models.UserInfo.query.get(user.uid)
             for info in ['student_id', 'grade', 'department',
@@ -88,6 +89,24 @@ class Member(restful.Resource):
                 members[info] = getattr(member_info, info)
             result[user.id] = members
 
-        return result
+        return result  # 两层dict
+
+    def delete(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('student_id', type=str)
+        args = parser.parse_args()
+
+        user = models.UserInfo.query.filter_by(student_id=args['student_id']).first()
+        id = user.uid
+        account = models.Account.query.get(id)
+        cre = models.Credential.query.filter_by(uid=id).all()
+        cre.append(user)
+        cre.append(account)
+
+        for member in cre:
+            g.db.session.delete(member)
+        g.db.session.commit()
+
+        return ''
 
 Entry = Member

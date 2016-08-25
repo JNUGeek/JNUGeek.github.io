@@ -5,7 +5,9 @@ from .user import (
         Applications,
         Timetable,
         Notification,
-        Mission
+        Mission,
+        NotiMember,
+        MnMember
     )
 
 from .misc import Session
