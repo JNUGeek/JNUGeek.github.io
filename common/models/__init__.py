@@ -7,7 +7,9 @@ from .user import (
         Notification,
         Mission,
         NotiMember,
-        MnMember
+        MnMember,
+        MyTimetable,
+        ApplyTime
     )
 
 from .misc import Session

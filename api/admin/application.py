@@ -6,6 +6,7 @@
 import flask_restful as restful
 from flask_restful import reqparse
 import common.models as models
+from flask import g
 from common.error import (
         UserInfoNotFound
     )

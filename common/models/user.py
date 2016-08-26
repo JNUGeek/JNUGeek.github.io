@@ -19,6 +19,7 @@ class Account(db.Model):  # 用户账户,用户名密码之类的
     credentials = db.relationship("Credential", back_populates="account")
     user_info = db.relationship("UserInfo",
                                 back_populates="account", uselist=False)
+    timetable = db.relationship("MyTimetable", back_populates="account")
 
     @property
     def is_authenticated(self):
@@ -81,17 +82,41 @@ class Applications(db.Model):
     admission = db.Column(db.Bool, default=False)
 
 
+class ApplyTime(db.Model):
+    __talbename__ = current_app.config["TABLE_PREFIX"] + 'apply_time'
+
+    id = db.Column(db.Integer, primary_key=True)
+    start = db.Column(db.String(64), default='')
+    end = db.Column(db.String(64), default='')
+
+
 class Timetable(db.Model):
     __talbename__ = current_app.config["TABLE_PREFIX"] + 'timetable'
 
     cls = db.Column(db.Integer, primary_key=True)
-    mon = db.Column(db.Bool, default=False)
-    tue = db.Column(db.Bool, default=False)
-    wed = db.Column(db.Bool, default=False)
-    thur = db.Column(db.Bool, default=False)
-    fri = db.Column(db.Bool, default=False)
-    sat = db.Column(db.Bool, default=False)
-    sun = db.Column(db.Bool, default=False)
+    mon = db.Column(db.Integer, default=0)
+    tue = db.Column(db.Integer, default=0)
+    wed = db.Column(db.Integer, default=0)
+    thur = db.Column(db.Integer, default=0)
+    fri = db.Column(db.Integer, default=0)
+    sat = db.Column(db.Integer, default=0)
+    sun = db.Column(db.Integer, default=0)
+
+
+class MyTimetable(db.Model):
+    __talbename__ = current_app.config["TABLE_PREFIX"] + 'my_timetable'
+
+    uid = db.Column(db.String(36), db.ForeignKey(Account.uid), primary_key=True)
+    mon = db.Column(db.Integer, default=0)
+    tue = db.Column(db.Integer, default=0)
+    wed = db.Column(db.Integer, default=0)
+    thur = db.Column(db.Integer, default=0)
+    fri = db.Column(db.Integer, default=0)
+    sat = db.Column(db.Integer, default=0)
+    sun = db.Column(db.Integer, default=0)
+
+    account = db.relationship(Account,
+                              back_populates="mytimetable", uselist=False)
 
 
 class Notification(db.Model):

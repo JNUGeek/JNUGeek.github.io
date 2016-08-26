@@ -28,7 +28,7 @@ class GetFullMission(restful.Resource):
         if mission is None:
             raise UserInfoNotFound("No missions posted.")
 
-        result = {}
+        result = dict()
         result['act_name'] = mission.act_name
         result['act_date'] = mission.act_date
         names = []

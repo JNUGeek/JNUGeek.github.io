@@ -4,7 +4,7 @@
 
 import flask_restful as restful
 import flask_login as login
-
+from flask import g
 from flask_restful import reqparse
 
 import common.models as models
@@ -14,10 +14,11 @@ class Timetable(restful.Resource):
     @login.login_required
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('timetable', type=bool, action='append')  # timetable是一个list中有list的复杂的list
+        parser.add_argument('timetable', type=int, action='append')  # timetable是一个list中有list的复杂的list
         args = parser.parse_args()
 
         tt = models.Timetable.query.get()
+        mytt = models.MyTimetable(uid=login.current_user.uid)
         if tt is None:
             table = models.Timetable()
             tt = models.Timetable.query.get()
@@ -26,16 +27,21 @@ class Timetable(restful.Resource):
         for num in range(10):
             number.append(num)
 
-        for (i, cls) in zip(number, tt):
+        for (i, cls, user) in zip(number, tt, mytt):
             j = 0
             for day in ['mon', 'tue', 'wed',
                         'thur', 'fri', 'sat', 'sun']:
                 if args['timetable'][i][j] is True:
-                    setattr(cls, day, args['timetable'][i][j])
+                    value = getattr(cls, day) + 1
+                    getattr(cls, day, value)
+                    setattr(user, day, 1)
                 j += 1
 
         g.db.session.add(tt)
+        g.db.session.add(mytt)
         g.db.session.commit()
+
+        return ''
 
     def get(self):
         timetable = models.Timetable.query.get()
