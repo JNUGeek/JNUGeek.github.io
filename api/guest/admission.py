@@ -25,8 +25,8 @@ class Admission(restful.Resource):
 
         admission = admission_info.admission
         if admission is False:
-            return {admission: False}
+            return {'admission': False}
 
-        return {admission: True}
+        return {'admission': True}
 
 Entry = Admission

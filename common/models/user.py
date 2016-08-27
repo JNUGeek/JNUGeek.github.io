@@ -19,7 +19,7 @@ class Account(db.Model):  # 用户账户,用户名密码之类的
     credentials = db.relationship("Credential", back_populates="account")
     user_info = db.relationship("UserInfo",
                                 back_populates="account", uselist=False)
-    timetable = db.relationship("MyTimetable", back_populates="account")
+    mytimetable = db.relationship("MyTimetable", back_populates="account")
 
     @property
     def is_authenticated(self):
@@ -71,6 +71,7 @@ class Applications(db.Model):
     __talbename__ = current_app.config["TABLE_PREFIX"] + 'application'
 
     id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer)
     name = db.Column(db.String(64))
     grade = db.Column(db.String(64))
     school = db.Column(db.String(128))
@@ -79,7 +80,7 @@ class Applications(db.Model):
     qq = db.Column(db.String(64))
     department = db.Column(db.String(128))
     introduction = db.Column(db.Text)
-    admission = db.Column(db.Bool, default=False)
+    admission = db.Column(db.Boolean, default=False)
 
 
 class ApplyTime(db.Model):
@@ -106,7 +107,8 @@ class Timetable(db.Model):
 class MyTimetable(db.Model):
     __talbename__ = current_app.config["TABLE_PREFIX"] + 'my_timetable'
 
-    uid = db.Column(db.String(36), db.ForeignKey(Account.uid), primary_key=True)
+    cls = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.String(36), db.ForeignKey(Account.uid))
     mon = db.Column(db.Integer, default=0)
     tue = db.Column(db.Integer, default=0)
     wed = db.Column(db.Integer, default=0)
@@ -128,55 +130,46 @@ class Notification(db.Model):
     content = db.Column(db.Text)
     cred_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
+    noti_member = db.relationship('NotiMember', back_populates='notifications')
+
 
 class NotiMember(db.Model):
-    __talbename__ = current_app.config["TABLE_PREFIX"] + 'noti_members'
+    __tablename__ = current_app.config["TABLE_PREFIX"] + 'noti_members'
+
     __table_args__ = (
             db.PrimaryKeyConstraint('id', 'uid'),
         )
 
-    id = db.Column(db.String(36), db.ForeignKey(Notification.id))
+    id = db.Column(db.Integer, db.ForeignKey(Notification.id))
     uid = db.Column(db.String(36))
     name = db.Column(db.String(64))
 
-    notifications = db.relationship("Notification", back_populates="noti_member")
+    notifications = db.relationship(Notification, back_populates="noti_member")
 
 
 class Mission(db.Model):
-    __talbename__ = current_app.config["TABLE_PREFIX"] + 'mission'
+    __tablename__ = current_app.config["TABLE_PREFIX"] + 'mission'
 
     id = db.Column(db.Integer, primary_key=True)
     act_name = db.Column(db.String(64))
     act_date = db.Column(db.String(64))
     cred_at = db.Column(db.DateTime, default=datetime.datetime.now)
-    end = db.Column(db.Bool, default=False)
+    end = db.Column(db.Boolean, default=False)
+
+    mn_member = db.relationship("MnMember", back_populates="missions")
 
 
 class MnMember(db.Model):
-    __talbename__ = current_app.config["TABLE_PREFIX"] + 'noti_members'
+    __tablename__ = current_app.config["TABLE_PREFIX"] + 'mn_members'
     __table_args__ = (
             db.PrimaryKeyConstraint('id', 'uid'),
         )
 
-    id = db.Column(db.String(36), db.ForeignKey(Mission.id))
+    id = db.Column(db.Integer, db.ForeignKey(Mission.id))
     uid = db.Column(db.String(36))
     name = db.Column(db.String(64))
     act_content = db.Column(db.Text)
     remarks = db.Column(db.Text)
 
-    missions = db.relationship("Mission", back_populates="mn_member")
+    missions = db.relationship(Mission, back_populates="mn_member")
 
-
-class Member(db.Model):  # 好像不需要
-    __talbename__ = current_app.config["TABLE_PREFIX"] + 'member'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    grade = db.Column(db.String(64))
-    school = db.Column(db.String(128))
-    major = db.Column(db.String(128))
-    phone = db.Column(db.String(64))
-    qq = db.Column(db.String(64))
-    department = db.Column(db.String(128))
-    introduction = db.Column(db.Text)
-    admission = db.Column(db.Bool, default=False)

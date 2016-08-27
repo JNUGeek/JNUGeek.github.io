@@ -29,5 +29,34 @@ for num in range(10):
     number.append(num)
 print(number)
 
+list = [1, 1, 1, 1, 1, 1, 1,
+        0, 0, 0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1]
+
+print(list[3])
+
+print(range(len(x)))
+
+argss = {'1': {'introduction': None, 'qq': None, 'name': 'paul', 'school': 'ist', 'student_id': 2015000000, 'grade': None, 'department': '技术组', 'major': 'cst'},
+         'b': {'f': 2},
+         'c': {'g': 3},
+         'd': {'h': 4}}
+print(argss['1'])
 
 
+#                data={'name': ['paul', 'ban'],
+ #                     'student_id': [2015000000, 2015000002],
+  #                    'grade': ['', ''],
+   #                   'school': ['ist', 'aaa'],
+    #                  'major': ['cst', 'bbb'],
+     #                 'phone': ['15500000000', '15500000003'],
+      #                'qq': ['', ''],
+       #               'department': ['技术组', '媒宣组'],
+        #              'introduction': ['', '']}

@@ -14,14 +14,17 @@ class Timetable(restful.Resource):
     @login.login_required
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('timetable', type=int, action='append')  # timetable是一个list中有list的复杂的list
+        parser.add_argument('timetable', type=int, action='append')  # timetable是一个list
         args = parser.parse_args()
 
-        tt = models.Timetable.query.get()
-        mytt = models.MyTimetable(uid=login.current_user.uid)
+        tt = models.Timetable.query.all()
+        mytt = []
+        for i in range(10):
+            mytt.append(models.MyTimetable(uid=login.current_user.uid))
         if tt is None:
-            table = models.Timetable()
-            tt = models.Timetable.query.get()
+            for i in range(10):
+                i = models.Timetable()
+            tt = models.Timetable.query.all()
 
         number = []
         for num in range(10):
@@ -31,20 +34,22 @@ class Timetable(restful.Resource):
             j = 0
             for day in ['mon', 'tue', 'wed',
                         'thur', 'fri', 'sat', 'sun']:
-                if args['timetable'][i][j] is True:
+                if args['timetable'][i*7 + j]:
                     value = getattr(cls, day) + 1
                     getattr(cls, day, value)
                     setattr(user, day, 1)
                 j += 1
 
-        g.db.session.add(tt)
-        g.db.session.add(mytt)
+        for cls in tt:
+            g.db.session.add(cls)
+        for cls in mytt:
+            g.db.session.add(cls)
         g.db.session.commit()
 
         return ''
 
     def get(self):
-        timetable = models.Timetable.query.get()
+        timetable = models.Timetable.query.all()
 
         result = {}
         number = []
@@ -55,7 +60,7 @@ class Timetable(restful.Resource):
             j = 0
             for day in ['mon', 'tue', 'wed',
                         'thur', 'fri', 'sat', 'sun']:
-                result['timetable'][i][j] = getattr(cls, day)
+                result['timetable'][i*7 + j] = getattr(cls, day)
                 j += 1
 
         return result  # result里面的timetable对应的value也和上面的相同形式

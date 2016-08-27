@@ -18,7 +18,7 @@ import common.models as models
 class Member(restful.Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('name', required=True)
+        parser.add_argument('name', type=str, required=True)
         parser.add_argument('student_id', type=int)
         parser.add_argument('grade', type=str)
         parser.add_argument('school', type=str)

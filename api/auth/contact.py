@@ -25,7 +25,7 @@ class Contact(restful.Resource):
         if 'name' not in args or not args['name']:
             raise UserInfoNotFound("Name is not provided")
 
-        contacts_info = models.Credential.query.filter_by(cred_value=args['name']).first()
+        contacts_info = models.Credential.query.filter_by(cred_type='name', cred_value=args['name']).first()
         if not contacts_info:
             raise UserInfoNotFound("This user hasn't provided any information")
 
@@ -34,10 +34,8 @@ class Contact(restful.Resource):
 
         result = {}
 
-        for info in args["info"]:
-            if info not in ['student_id', 'grade', 'department',
-                            'school', 'major', 'qq', 'introduction']:
-                continue
+        for info in ['student_id', 'grade', 'department',
+                     'school', 'major', 'qq', 'introduction']:
             result[info] = getattr(contacts_info, info)
 
         return result
