@@ -10,7 +10,9 @@ from common.models import (
         Credential,
         UserInfo,
         MyTimetable,
-        Applications
+        Applications,
+        ApplyTime,
+        Mission
     )
 from common.error import *
 from common.utils import ApiTest, test_context
@@ -72,6 +74,10 @@ class AuthTest(ApiTest):
                 major='cst',
                 phone='15500000001',
                 department='技术组'
+        ))
+        self.dbsess.add(ApplyTime(
+            start='9.12',
+            end='10.12'
         ))
         self.dbsess.commit()
 
@@ -315,6 +321,52 @@ class AuthTest(ApiTest):
             )
         data = self.load_data(response.data)
         print(data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_change_appliytime(self):
+        response = self.post(
+                endpoint="api.admin.applytime",
+                data={'start': '9.12',
+                      'end': '10.12'}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_see_appliytime(self):
+        response = self.get(
+                endpoint="api.admin.applytime",
+                data={}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['start'], '9.12')
+
+    @test_context
+    def test_post_mission(self):
+        response = self.post(
+                endpoint="api.admin.mission",
+                data={'act_name': 'newcomer\'s night',
+                      'act_date': '9.12',
+                      'name': ['gump', 'john'],
+                      'act_content': ['eat', 'sleep'],
+                      'remarks': ['', '']}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_see_mission(self):  # 这里有问题,明天再来
+        response = self.get(
+                endpoint="api.admin.mission",
+                data={}
+            )
+        data = self.load_data(response.data)
 
         self.assertEqual(response.status_code, 200)
 

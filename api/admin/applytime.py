@@ -20,7 +20,7 @@ class Application(restful.Resource):
         parser.add_argument('end', type=str)
         args = parser.parse_args()
 
-        time = models.ApplyTime.query.get()
+        time = models.ApplyTime.query.first()
         if time is None:
             time = models.ApplyTime()
 
@@ -33,12 +33,13 @@ class Application(restful.Resource):
         return ''
 
     def get(self):
-        time = models.ApplyTime.query.get()
+        time = models.ApplyTime.query.first()
+
+        result = dict()
 
         if time is None:
             time = models.ApplyTime()
 
-        result = dict()
         result['start'] = getattr(time, 'start')
         result['end'] = getattr(time, 'end')
 

@@ -32,9 +32,10 @@ class Mission(restful.Resource):
                 continue
             setattr(new_mission, info, args[info])
         for (name, content, rmk) in zip(args['name'], args['act_content'], args['remarks']):
-            info = models.UserInfo.query.filter_by(name=name).first()
+            info = models.Credential.query.filter_by(cred_type='name', cred_value=name).first()
             uid = info.uid
-            member = models.MnMember(id=id, uid=uid, name=name, act_content=content, remarks=rmk)
+            # 为毛id要是字符...
+            member = models.MnMember(id=str(new_mission.id), uid=uid, name=name, act_content=content, remarks=rmk)
             g.db.session.add(member)
 
         g.db.session.add(new_mission)
@@ -43,10 +44,10 @@ class Mission(restful.Resource):
         return {'id': new_mission.id}
 
     @login.login_required
-    def get(self):
+    def get(self):  # 你也有问题,明天再改
 
-        mission = models.Mission.query.filter_by\
-        (uid=login.current_user.uid).order_by(models.Mission.cred_at).all()
+        mission = models.MnMember.query.filter_by\
+        (uid=login.current_user.uid).order_by(models.MnMember.id).all()
         if mission is None:
             raise UserInfoNotFound("No missions posted.")
 
@@ -54,10 +55,12 @@ class Mission(restful.Resource):
         end_mn = []
         last_mn = []
         for mn in mission:
-            if getattr(mn, 'end') is False:
-                last_mn.append(getattr(mn, 'act_name'))
+            id = getattr(mn, 'id')
+            this_mn = models.Mission.query.get(id)
+            if getattr(this_mn, 'end') is False:
+                last_mn.append(getattr(this_mn, 'act_name'))
             else:
-                end_mn.append(getattr(mn, 'act_name'))
+                end_mn.append(getattr(this_mn, 'act_name'))
         result['end'] = end_mn
         result['last'] = last_mn
 
