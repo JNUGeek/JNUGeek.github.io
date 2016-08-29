@@ -67,7 +67,7 @@ class Member(restful.Resource):
 
     def get(self):
 
-        users = models.Account.query.get()
+        users = models.Account.query.all()
         if users is None:
             raise UserInfoNotFound("No member exists")
 
@@ -75,19 +75,23 @@ class Member(restful.Resource):
         result = {}
         for user in users:
             for info in ['name', 'phone']:
-                member = models.Credential.query.filter_by(uid=user.uid, cred_type=info).first()
-                if member.cred_type is None:
+                member = models.Credential.query.filter_by(uid=getattr(user, 'uid'), cred_type=info).first()
+                if member is None:
                     members[info] = None
-                members[info] = member.cred_value
+                else:
+                    members[info] = member.cred_value
 
         for user in users:
-            member_info = models.UserInfo.query.get(user.uid)
+            member_info = models.UserInfo.query.filter_by(uid=getattr(user, 'uid')).first()
             for info in ['student_id', 'grade', 'department',
                          'school', 'major', 'qq', 'introduction']:
-                if user.info is None:
-                    members[info] = None
+                try:
+                    getattr(member_info, info)
+                except AttributeError as e:
+                    continue
                 members[info] = getattr(member_info, info)
-            result[user.id] = members
+            member = models.Credential.query.filter_by(uid=getattr(user, 'uid'), cred_type='name').first()
+            result[member.cred_value] = members
 
         return result  # 两层dict
 

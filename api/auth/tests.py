@@ -12,7 +12,8 @@ from common.models import (
         MyTimetable,
         Applications,
         ApplyTime,
-        Mission
+        Mission,
+        MnMember
     )
 from common.error import *
 from common.utils import ApiTest, test_context
@@ -27,20 +28,32 @@ class AuthTest(ApiTest):
                 passwd=hashlib.md5(b"123pass").hexdigest()
             )
         self.account_2 = Account()
+        self.account_3 = Account(
+                passwd=hashlib.md5(b"123").hexdigest()
+            )
 
         self.dbsess.add(self.account_1)
         self.dbsess.add(self.account_2)
+        self.dbsess.add(self.account_3)
         self.dbsess.flush()
         self.dbsess.add(Credential(
                 uid=self.account_1.uid,
                 cred_type='name',
                 cred_value='john'
             ))
+        self.dbsess.add(Credential(
+                uid=self.account_3.uid,
+                cred_type='name',
+                cred_value='patrick'
+            ))
         self.dbsess.add(MyTimetable(
                 uid=self.account_1.uid
         ))
         self.dbsess.add(MyTimetable(
                 uid=self.account_2.uid
+        ))
+        self.dbsess.add(MyTimetable(
+                uid=self.account_3.uid
         ))
         self.dbsess.add(Credential(
                 uid=self.account_2.uid,
@@ -55,6 +68,13 @@ class AuthTest(ApiTest):
         self.dbsess.add(UserInfo(
                 uid=self.account_2.uid,
                 student_id=2013999999,
+                department=u'\u4e00\u70b9\u4eba\u751f\u7684\u7ecf\u9a8c',
+                school=u'\u4e00\u70b9\u5fae\u5c0f\u7684\u5de5\u4f5c',
+                introduction=u'\u4e00\u4e2a\u4e0a\u6d77\u7684\u4e66\u8bb0'
+            ))
+        self.dbsess.add(UserInfo(
+                uid=self.account_3.uid,
+                student_id=2013,
                 department=u'\u4e00\u70b9\u4eba\u751f\u7684\u7ecf\u9a8c',
                 school=u'\u4e00\u70b9\u5fae\u5c0f\u7684\u5de5\u4f5c',
                 introduction=u'\u4e00\u4e2a\u4e0a\u6d77\u7684\u4e66\u8bb0'
@@ -79,6 +99,24 @@ class AuthTest(ApiTest):
             start='9.12',
             end='10.12'
         ))
+        self.dbsess.add(Mission(
+            id=1,
+            act_name='night',
+            act_date='5.23',
+        ))
+        self.dbsess.add(MnMember(
+            id=1,
+            uid=self.account_1.uid,
+            name='john',
+            act_content='this'
+        ))
+        self.dbsess.add(MnMember(
+            id=1,
+            uid=self.account_2.uid,
+            name='gump',
+            act_content='that'
+        ))
+
         self.dbsess.commit()
 
     @test_context
@@ -361,10 +399,70 @@ class AuthTest(ApiTest):
         self.assertEqual(response.status_code, 200)
 
     @test_context
-    def test_see_mission(self):  # 这里有问题,明天再来
+    def test_see_mission(self):
+        self.login_user(self.account_2)
         response = self.get(
                 endpoint="api.admin.mission",
                 data={}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['last'][0], 'night')
+
+    @test_context
+    def test_see_fullmission(self):  # 这里有问题,明天再来
+        self.login_user(self.account_2)
+        response = self.get(
+                endpoint="api.admin.fullmission",
+                data={'id': 1}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_see_fullmission(self):  # 这里有问题,明天再来
+        self.login_user(self.account_2)
+        response = self.get(
+                endpoint="api.auth.get_mission",
+                data={}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_add_member(self):
+        response = self.post(
+                endpoint="api.admin.member",
+                data={'name': 'peter',
+                      'student_id': '2015000004',
+                      'grade': '大一',
+                      'school': 'ist',
+                      'major': 'se',
+                      'phone': '15500000002',
+                      }
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_see_members(self):
+        response = self.get(
+                endpoint="api.admin.member",
+                data={}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_delete_members(self):
+        response = self.delete(  # 这样不行啊,删除的api还是要想一下
+                endpoint="api.admin.member",
+                data={'student_id': 2013}
             )
         data = self.load_data(response.data)
 

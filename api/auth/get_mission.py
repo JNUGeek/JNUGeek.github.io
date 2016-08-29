@@ -19,8 +19,8 @@ class GetMn(restful.Resource):
     @login.login_required
     def get(self):
 
-        mission = models.Mission.query.filter_by\
-        (uid=login.current_user.uid).order_by(models.Mission.cred_at).all()
+        mission = models.MnMember.query.filter_by\
+        (uid=login.current_user.uid).order_by(models.MnMember.id).all()
         if mission is None:
             raise UserInfoNotFound("No missions posted.")
 
@@ -28,10 +28,12 @@ class GetMn(restful.Resource):
         end_mn = []
         last_mn = []
         for mn in mission:
-            if getattr(mn, 'end') is False:
-                last_mn.append(getattr(mn, 'act_name'))
+            id = getattr(mn, 'id')
+            this_mn = models.Mission.query.get(id)
+            if getattr(this_mn, 'end') is False:
+                last_mn.append(getattr(this_mn, 'act_name'))
             else:
-                end_mn.append(getattr(mn, 'act_name'))
+                end_mn.append(getattr(this_mn, 'act_name'))
         result['end'] = end_mn
         result['last'] = last_mn
 

@@ -44,7 +44,7 @@ class Mission(restful.Resource):
         return {'id': new_mission.id}
 
     @login.login_required
-    def get(self):  # 你也有问题,明天再改
+    def get(self):
 
         mission = models.MnMember.query.filter_by\
         (uid=login.current_user.uid).order_by(models.MnMember.id).all()
