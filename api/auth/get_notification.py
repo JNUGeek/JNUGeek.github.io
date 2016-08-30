@@ -25,8 +25,8 @@ class GetNoti(restful.Resource):
 
         result = {}
         for noti in notification:
-            mn_id = getattr(noti, 'id')
-            result[mn_id] = []
+            title = getattr(noti, 'title')
+            result[title] = []
             nt = models.Notification.query.filter_by(id=mn_id).first()
             for info in ['title', 'content']:
                 result[info].append(getattr(nt, info))
