@@ -13,7 +13,9 @@ from common.models import (
         Applications,
         ApplyTime,
         Mission,
-        MnMember
+        MnMember,
+        Timetable,
+        Notification
     )
 from common.error import *
 from common.utils import ApiTest, test_context
@@ -47,13 +49,28 @@ class AuthTest(ApiTest):
                 cred_value='patrick'
             ))
         self.dbsess.add(MyTimetable(
-                uid=self.account_1.uid
+                uid=self.account_1.uid,
+                mon=1,
+                wed=1
         ))
         self.dbsess.add(MyTimetable(
-                uid=self.account_2.uid
+                uid=self.account_1.uid,
+                sat=1
         ))
         self.dbsess.add(MyTimetable(
-                uid=self.account_3.uid
+                uid=self.account_2.uid,
+                tue=1
+        ))
+        self.dbsess.add(MyTimetable(
+                uid=self.account_3.uid,
+                sun=1
+        ))
+        self.dbsess.add(Timetable(
+                mon=1,
+                wed=1
+        ))
+        self.dbsess.add(Timetable(
+                sat=1
         ))
         self.dbsess.add(Credential(
                 uid=self.account_2.uid,
@@ -115,6 +132,11 @@ class AuthTest(ApiTest):
             uid=self.account_2.uid,
             name='gump',
             act_content='that'
+        ))
+        self.dbsess.add(Notification(
+            title='a title',
+            department='技术组',
+            content='get girls'
         ))
 
         self.dbsess.commit()
@@ -422,11 +444,22 @@ class AuthTest(ApiTest):
         self.assertEqual(response.status_code, 200)
 
     @test_context
-    def test_see_fullmission(self):  # 这里有问题,明天再来
+    def test_see_fullmission(self):
         self.login_user(self.account_2)
         response = self.get(
                 endpoint="api.auth.get_mission",
                 data={}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_member_see_fullmn(self):
+        self.login_user(self.account_2)
+        response = self.get(
+                endpoint="api.auth.get_fullmn",
+                data={'id': 1}
             )
         data = self.load_data(response.data)
 
@@ -460,9 +493,76 @@ class AuthTest(ApiTest):
 
     @test_context
     def test_delete_members(self):
-        response = self.delete(  # 这样不行啊,删除的api还是要想一下
-                endpoint="api.admin.member",
+        response = self.get(
+                endpoint="api.admin.deletemember",
                 data={'student_id': 2013}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_see_timetable(self):
+        response = self.get(
+                endpoint="api.admin.timetable",
+                data={'user': 'john'}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_see_general_timetable(self):
+        response = self.get(
+                endpoint="api.admin.timetable",
+                data={}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_notify_with_specific_member(self):
+        response = self.post(
+                endpoint="api.admin.notify",
+                data={'title': 'party',
+                      'department': '其他',
+                      'members': ['john', 'gump'],
+                      'content': 'have fun'
+                      }
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_notify_with_department(self):
+        response = self.post(
+                endpoint="api.admin.notify",
+                data={'title': 'party',
+                      'department': '技术组',
+                      'content': 'have fun'
+                      }
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_see_notification(self):
+        response = self.get(
+                endpoint="api.admin.notify",
+                data={}
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+
+    @test_context
+    def test_member_see_fullmn(self):
+        self.login_user(self.account_2)
+        response = self.get(
+                endpoint="api.auth.get_notification"
             )
         data = self.load_data(response.data)
 

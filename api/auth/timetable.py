@@ -51,7 +51,10 @@ class Timetable(restful.Resource):
     def get(self):
         timetable = models.Timetable.query.all()
 
-        result = {}
+        result = dict()
+        result['timetable'] = []
+        for i in range(70):
+            result['timetable'].append(0)
         number = []
         for num in range(10):
             number.append(num)

@@ -124,8 +124,7 @@ class MyTimetable(db.Model):
 class Notification(db.Model):
     __talbename__ = current_app.config["TABLE_PREFIX"] + 'notification'
 
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(128))
+    title = db.Column(db.String(128), primary_key=True)
     department = db.Column(db.String(128))
     content = db.Column(db.Text)
     cred_at = db.Column(db.DateTime, default=datetime.datetime.now)
@@ -135,14 +134,14 @@ class Notification(db.Model):
 
 class NotiMember(db.Model):
     __tablename__ = current_app.config["TABLE_PREFIX"] + 'noti_members'
-
     __table_args__ = (
-            db.PrimaryKeyConstraint('id', 'uid'),
+            db.PrimaryKeyConstraint('title', 'uid'),
         )
 
-    id = db.Column(db.Integer, db.ForeignKey(Notification.id))
+    title = db.Column(db.String(128), db.ForeignKey(Notification.title))
     uid = db.Column(db.String(36))
     name = db.Column(db.String(64))
+    cred_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
     notifications = db.relationship(Notification, back_populates="noti_member")
 
