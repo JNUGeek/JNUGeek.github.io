@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="JNUgeek">
+    <meta name="author" content="Patrick">
+
+
+    <title>JNUgeek-Login</title>
+
+    <script type="text/javascript">
+function login(acc, psw)
+{
+var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("POST","/api/auth/login/",true);
+xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+xmlhttp.send("name={0}&passwd={1}".format(acc, psw));
+}
+</script>
+
+</head>
+<body>
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">JNUgeek</h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li class="active"><a href="index.html">Home</a></li>
+                  <li><a href="">Apply</a></li>
+                  <li><a href="">Account</a></li>
+                    <li><a href="">Logout</a></li>
+                    <li><a href="">Login</a></li>
+                    <li><a href="">Register</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+<h1>Login</h1>
+<form action="/api/auth/login/" method="post" name="login">
+    <p>
+        账号:<input id="name" name="name" size="80" type="text"><br><!--如果直接这样写那就要指明输入类型,要不然后台结果就会不对应,或者来个判断?又或者用ajax?-->
+        用手机号或者邮箱登录<br>
+        密码:<input id="paswd" name="passwd" size="80" type="password">
+    </p>
+    <input type="submit" value="login">
+
+</form>
+</body>
+</html>
+

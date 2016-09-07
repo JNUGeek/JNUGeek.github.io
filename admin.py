@@ -85,8 +85,6 @@ def test(dbecho=False, record=""):
 
 @as_command()
 def initdb(drop=False):
-    import common.models
-
     if not drop:
         g.db.create_all()
     else:

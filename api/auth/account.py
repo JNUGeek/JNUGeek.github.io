@@ -4,6 +4,7 @@
 
 
 import flask_restful as restful
+import hashlib
 from flask_restful import reqparse
 from sqlalchemy.exc import IntegrityError
 
@@ -23,11 +24,15 @@ class Account(restful.Resource):
         parser.add_argument('name', required=True)
         parser.add_argument('email', type=email_type)
         parser.add_argument('phone', type=phone_type)
-        parser.add_argument('passwd', type=md5_hashed_type)
+        parser.add_argument('passwd')
 
         args = parser.parse_args()
 
+        md5 = hashlib.md5()
+        md5.update(args['passwd'].encode('utf-8'))
+        args['passwd'] = md5.hexdigest()
         new_account = models.Account(
+
                 passwd=args['passwd'],
             )
         g.db.session.add(new_account)

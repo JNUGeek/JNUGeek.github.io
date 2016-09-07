@@ -4,6 +4,7 @@
 
 import flask_restful as restful
 import flask_login as login
+import hashlib
 
 from flask_restful import reqparse
 from flask import g
@@ -28,11 +29,15 @@ class Login(restful.Resource):
         parser.add_argument('name')
         parser.add_argument('email', type=email_type)
         parser.add_argument('phone', type=phone_type)
-        parser.add_argument('passwd', type=md5_hashed_type, default="")
+        parser.add_argument('passwd', default="")
         parser.add_argument('remember_me', type=bool, default=False)
         args = parser.parse_args()
 
         account = None
+
+        md5 = hashlib.md5()
+        md5.update(args['passwd'].encode('utf-8'))
+        args['passwd'] = md5.hexdigest()
 
         if args['uid']:  # 如果有uid,也就是用户名
             account = Account.query.get(args['uid'])

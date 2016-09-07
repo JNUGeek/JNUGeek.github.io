@@ -333,9 +333,7 @@ class AuthTest(ApiTest):
         self.login_user(self.account_2)
         response = self.get(
                 endpoint="api.auth.userinfo",
-                data={
-                    'info': ['introduction', 'school'],
-                }
+                data={}
             )
         data = self.load_data(response.data)
 
@@ -348,7 +346,6 @@ class AuthTest(ApiTest):
                 endpoint="api.auth.userinfo",
                 data={
                     'uid': self.account_2.uid,
-                    'info': ['introduction', 'school'],
                 }
             )
         data = self.load_data(response.data)
