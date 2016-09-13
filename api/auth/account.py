@@ -29,8 +29,9 @@ class Account(restful.Resource):
         args = parser.parse_args()
 
         md5 = hashlib.md5()
-        md5.update(args['passwd'].encode('utf-8'))
-        args['passwd'] = md5.hexdigest()
+        if args['passwd']:
+            md5.update(args['passwd'].encode('utf-8'))
+            args['passwd'] = md5.hexdigest()
         new_account = models.Account(
 
                 passwd=args['passwd'],
