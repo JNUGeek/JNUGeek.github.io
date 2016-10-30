@@ -1,0 +1,232 @@
+
+ .boxgrid{width:280px;height:400px;margin:10px;overflow:hidden;position:relative;}
+      .boxgrid h3{margin:10px 10px 0 10px;color:#FFF;font:18pt Arial, sans-serif;letter-spacing:-1px;font-weight:bold;}
+      .boxgrid img{position:absolute;top:0;left:0;border:0; margin:0px;}  
+      .boxcaption{float:left;position:absolute;background:#000;height:100%;width:100%;opacity:.8;}
+      .caption .boxcaption {top:85%;left:0px; margin: 0;}
+      .tile-image{width: 280px; height: 400px;}
+      .tile{background-color: transparent;}
+.nav1{
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	height: 100px;
+	z-index: 1;
+}
+li{
+	font-family:Microsoft YaHei;
+	margin-top: 5px;
+	font-size: 15px;
+	font-weight: bolder;
+	margin-right: 13px;
+
+}
+
+
+footer{
+	width: 100%;
+	height:70px;
+	background-color: #22252B;
+	position: relative;
+}
+.end{
+	text-align: center;
+	font-weight: bolder;
+	font-size: 18px;
+	padding-bottom: 5px ;
+	position: absolute;
+	bottom: 0%;
+	height: 50px;
+}
+
+h5{font-size: 16px;font-weight: 600;}
+.img-icon{
+	width: 70px;
+	height: auto;
+}
+.success1{
+	background-color: rgba(223, 224, 197, 0.42);
+	color: black;
+}
+
+.span2{
+	width: 97%;
+	height: 320px;
+	text-align: center;
+	white-space: pre;
+	font-weight: 600;
+}
+.span3{
+	width: 100%;
+	height: auto;
+	position: relative;
+	text-align: center;
+	font-weight: 600;
+	white-space: pre;
+}
+
+@media(min-width: 768px){
+.span5{
+	width: 55%;
+	position: absolute;
+	left: 22%;
+	top: 13%;
+	text-align: center;
+	letter-spacing: 5px;
+}
+.span7{
+	position: relative;
+	width: 25%;
+	text-align: center;
+	white-space: pre;
+	font-weight: 600;
+float: left;
+}
+.span9{
+	 font-family: Microsoft YaHei,'å®‹ä½“' , Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+	 font-size: 55px;
+	 font-weight: 600;
+	 letter-spacing: 15px;
+}
+.poster1{
+	background-image: url("http://ofhwq2r7f.bkt.clouddn.com/10.jpg"); 
+	background-position: center top; 
+	height: 653px;
+    width: 100%
+}
+.btn4{
+	position: absolute;
+	margin-top: 40px;
+	width: 20%;
+	left: 40%;
+	font-size: 80px;
+	background-color: rgba(0,0,0,0);
+	color: white;
+}
+.btn5{
+	position: absolute;
+	margin-top: 260px;
+	font-size: 50px;
+	width: 20%;
+	left: 41%;
+	background-color: rgba(0,0,0,0);
+	color: white;
+	}
+	.name{
+	position: absolute;
+	top: 30%;
+	width: 100%;
+	color: white;
+	font-weight: 500;
+	letter-spacing: 10px;
+	text-align: center;
+}
+}
+@media(max-width: 768px){
+	.span5{
+	width: 70%;
+	position: absolute;
+	left: 15%;
+	top: 6%;
+    text-align: center;
+}
+    .span7{
+	position: relative;
+	width: 20%;
+	text-align: center;
+	white-space: pre;
+	font-weight: 500;
+    float: left;
+    font-size: 15px;
+}
+.name{
+	position: absolute;
+	top: 18%;
+	width: 100%;
+	color: white;
+	font-weight: 500;
+	letter-spacing: 10px;
+	text-align: center;
+}
+.span9{
+	 font-family: Microsoft YaHei, Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+	 font-size: 30px;
+	 font-weight: 600;
+	 position: absolute;
+	 top: 20%;
+	 left: 8%;
+}
+.poster1{
+	background-image: url("../images/10(2).jpg"); 
+	background-position: center top; 
+	height: 455px;
+    width: 100%}
+.btn4{
+	position: absolute;
+	margin-top: 80px;
+	width: 20%;
+	left: 40%;
+	font-size: 65px;
+	background-color: rgba(0,0,0,0);
+	color: white;
+}
+.btn5{
+	position: absolute;
+	margin-top: 260px;
+	font-size: 35px;
+	width: 20%;
+	left: 40%;
+	background-color: rgba(0,0,0,0);
+	color: white;
+	}
+}
+h2{
+	font-size: 33px;
+}
+h3{
+	font-size: 28px;
+}
+
+.welcome{
+	word-spacing: pre;
+	background-color: #999999;
+	height: 400px;
+	position: relative;
+	color: white;
+}
+.menbers{
+	background-color: #fff;
+}
+
+
+
+.btn3{
+	position: absolute;
+	margin-top:50px;
+}
+
+
+
+
+/*.section1{
+	width: 100%;
+	position: relative;
+	top: 0%;
+	height: auto;
+}*/
+
+.us{
+	width: 100%;
+	height: 240px;
+}
+
+
+.video1{
+	position: relative;
+    text-align: center;
+    width: 100%;
+    height:550px;
+    color: white;
+
+
+}

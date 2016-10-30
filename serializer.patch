@@ -1,0 +1,13 @@
+--- a/common/utils.py
++++ b/common/utils.py
+@@ -100,8 +100,8 @@ class DatabaseSession(CallbackDict, SessionMixin):
+         return str(uuid.uuid4())
+ 
+ class DatabaseSessionInterface(SessionInterface):
+-    serializer = pickle.dumps
+-    unserializer = pickle.loads
++    serializer = lambda s, d: pickle.dumps(d, protocol=2)
++    unserializer = lambda s, d: pickle.loads(d)
+     session_class = DatabaseSession
+ 
+     def __init__(self, db, table):

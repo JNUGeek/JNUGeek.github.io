@@ -1,0 +1,16 @@
+form{
+	padding-left: 0px;
+	padding-right: 30%S;
+}
+.well{
+	positon:relative;
+}
+.well form{
+
+}
+.well input{
+	width: 100%;
+}
+.well textarea{
+	width: 100%;
+}
