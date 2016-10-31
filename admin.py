@@ -51,7 +51,7 @@ Output Data:
 """
 
 
-
+@as_command()
 def run(port=5000):
     current_app.run(port=port, debug=True)
 
@@ -155,7 +155,8 @@ app = common.init.get_app()
     
 with app.app_context():
     common.init.init_everything()
-    run()
+    run_command()
+
 
 
 

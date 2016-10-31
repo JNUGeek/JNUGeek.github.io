@@ -81,6 +81,7 @@ class Applications(db.Model):
     qq = db.Column(db.String(64))
     department = db.Column(db.String(128))
     introduction = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     admission = db.Column(db.Boolean, default=False)
 
 
@@ -117,6 +118,7 @@ class MyTimetable(db.Model):
     fri = db.Column(db.Integer, default=0)
     sat = db.Column(db.Integer, default=0)
     sun = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
     account = db.relationship(Account,
                               back_populates="mytimetable", uselist=False)
