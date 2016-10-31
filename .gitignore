@@ -1,4 +1,4 @@
-common/models/config.py
+config.py
 
 *.xml
 
