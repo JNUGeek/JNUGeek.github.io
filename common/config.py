@@ -28,7 +28,7 @@ class ApiConfig:
 class ApiDebugConfig(ApiConfig):
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:ctyyx@localhost/cty'
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:passwd@localhost/cty'
     SQLALCHEMY_ECHO = True
 
 
