@@ -6,4 +6,4 @@ config.py
 
 *.pyc
 
-.idea
+.idea/
