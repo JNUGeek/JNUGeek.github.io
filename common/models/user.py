@@ -71,8 +71,8 @@ class UserInfo(db.Model):  # 用户信息,学号部门之类的
 class Applications(db.Model):
     __talbename__ = current_app.config["TABLE_PREFIX"] + 'application'
 
-    id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer)
+    id = db.Column(db.Integer)
+    student_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     grade = db.Column(db.String(64))
     school = db.Column(db.String(128))

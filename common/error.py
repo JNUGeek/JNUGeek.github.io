@@ -68,3 +68,10 @@ class AdmissionInfoNotFound(ApiError):
         self.message = "Admission info can't be found"
         if reason:
             self.message += ": " + reason
+
+
+class ApplicationAlreadyExists(ApiError):
+    error_code = 7
+
+    def __init__(self):
+        self.message = "Application information is duplicated"

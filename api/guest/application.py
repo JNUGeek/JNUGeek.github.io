@@ -12,6 +12,8 @@ from common.utils import (
         phone_type
     )
 import common.models as models
+from sqlalchemy.exc import IntegrityError
+from common.error import *
 
 
 class Application(restful.Resource):
@@ -37,7 +39,10 @@ class Application(restful.Resource):
                 continue
             setattr(new_applicant, info, args[info])
         g.db.session.add(new_applicant)
-        g.db.session.commit()
+        try:
+            g.db.session.commit()
+        except IntegrityError:
+            raise AccountAlreadyExists()
 
         return {'id': new_applicant.id}
 

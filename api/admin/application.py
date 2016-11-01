@@ -64,7 +64,7 @@ class Application(restful.Resource):
         try:
             g.db.session.commit()
         except IntegrityError:
-            raise AccountAlreadyExists()
+            raise ApplicationAlreadyExists()
 
         return ''
 
