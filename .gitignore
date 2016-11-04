@@ -1,9 +1,4 @@
-config.py
-
-*.xml
-
-*.iml
-
-*.pyc
-
 .idea/
+
+geek/
+

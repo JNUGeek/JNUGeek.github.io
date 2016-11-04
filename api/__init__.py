@@ -4,7 +4,6 @@
 def get_blueprint():
     from flask_restful import Api
     from flask import Blueprint
-
     from common.utils import find_modules, join_url
 
     # 注册了蓝图并初始化应用

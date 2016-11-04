@@ -1,28 +1,16 @@
 # DO NOT IMPORT FLASK BASED LIBRARIES IN THIS FILE
 
 from datetime import timedelta
-import os
 
 
 class ApiConfig:
-    APPNAME = "assoplat"
+    APPNAME = "JNUHeek2015"
     TABLE_PREFIX = "geek_"
-    SECRET_KEY = "Too Young Too Simple, Sometimes Naive"
+    SECRET_KEY = "Try to make big news."
 
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
 
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-
-    MAIL_SERVER = 'smtp.sina.com'
-    MAIL_PORT = 465
-    MAIL_USE_TLS = False
-    MAIL_USE_SSL = True
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    ADMIN = 'chengtianyang523@sina.com'
-
-    # administrator list
-    ADMINS = ['chengtiyanyang@gmail.com']
 
 
 class ApiDebugConfig(ApiConfig):

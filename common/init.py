@@ -1,14 +1,12 @@
 # Initialize globally used variables
-
 _app = None
 _db = None
 _login_manager = None
-_mail = None
 
 from flask import current_app
 
 
-def get_app():  # 初始化app
+def get_app():
     global _app
 
     if not _app:
@@ -21,7 +19,7 @@ def get_app():  # 初始化app
     return _app
 
 
-def get_db():  # 初始化数据库
+def get_db():
     global _db
 
     if not _db:
@@ -33,7 +31,7 @@ def get_db():  # 初始化数据库
     return _db
 
 
-def get_login_manager():  # 初始化LoginManger
+def get_login_manager():
     global _login_manager
 
     if not _login_manager:
@@ -45,17 +43,6 @@ def get_login_manager():  # 初始化LoginManger
     return _login_manager
 
 
-def get_mail():  # 初始化邮件
-    global _mail
-
-    if not _mail:
-        from flask_mail import Mail
-
-        _mail = Mail(current_app)
-        _mail.init_app(current_app)
-
-    return _mail
-
 ################################################################################
 # Initialization Items
 
@@ -66,7 +53,6 @@ def init_global_variables():
 
     g.db = LocalProxy(get_db)
     g.login_manager = LocalProxy(get_login_manager)
-    g.mail = LocalProxy(get_mail)
 
 
 def init_session_interface():
@@ -86,13 +72,14 @@ def init_user_loader():
         return get_db().session.query(Account).get(uid)
 
 
-def init_app():  # 初始化app
+def init_app():
     # we still need those global variables during request
     import os
     import api
     import json
     import mimetypes
     import common.error
+    from flask import render_template
 
     current_app.before_request(init_global_variables)
 
@@ -100,20 +87,32 @@ def init_app():  # 初始化app
     def error_handler(error):
         return json.dumps(error.data), 400
 
-    @current_app.route('/', defaults={'filename': 'home'})
-    @current_app.route('/<path:filename>')
-    def send_static_files(filename):
-        if os.path.isfile(os.path.join('static', filename)):
-            pass
-        if os.path.isfile(os.path.join('static', filename + '.html')):
-            filename += '.html'
-        if os.path.isfile(os.path.join('static', filename, 'pre.html')):
-            filename += "/pre.html"
+    @current_app.route('/')
+    def index():
+        return render_template('home.html')
 
-        resp = current_app.send_static_file(filename)
-        resp.mimetype = mimetypes.guess_type(filename)[0]
+    @current_app.route('/login')
+    def login_view():
+        return render_template('login.html')
 
-        return resp
+    @current_app.route('/presign')
+    def presign_view():
+        return render_template('pre-sign.html')
+
+    # @current_app.route('/', defaults={'filename': 'home'})
+    # @current_app.route('/<path:filename>')
+    # def send_static_files(filename):
+    #     if os.path.isfile(os.path.join('static', filename)):
+    #         pass
+    #     if os.path.isfile(os.path.join('static', filename + '.html')):
+    #         filename += '.html'
+    #     if os.path.isfile(os.path.join('static', filename, 'pre.html')):
+    #         filename += "/pre.html"
+    #
+    #     resp = current_app.send_static_file(filename)
+    #     resp.mimetype = mimetypes.guess_type(filename)[0]
+    #
+    #     return resp
 
     current_app.register_blueprint(api.get_blueprint(), url_prefix="/api")
 
