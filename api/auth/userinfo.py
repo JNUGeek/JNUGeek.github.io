@@ -7,11 +7,9 @@ import flask_login as login
 
 from flask_restful import reqparse
 from flask import g, session
-
+from sqlalchemy.exc import IntegrityError
 import common.models as models
-from common.error import (
-        UserInfoNotFound
-    )
+from common.error import *
 
 
 class UserInfo(restful.Resource):
@@ -39,7 +37,10 @@ class UserInfo(restful.Resource):
                 continue
             setattr(user_info, info, args[info])  # 没有就放进去即user_info.info = args[info]
 
-        g.db.session.commit()
+        try:
+            g.db.session.commit()
+        except IntegrityError:
+            raise ApplicationAlreadyExists
 
         return {"uid": user_info.uid}
 

@@ -79,6 +79,8 @@ def init_app():
     import json
     import mimetypes
     import common.error
+    import flask_login as login
+    import common.models as models
     from flask import render_template
 
     current_app.before_request(init_global_variables)
@@ -98,6 +100,17 @@ def init_app():
     @current_app.route('/presign')
     def presign_view():
         return render_template('pre-sign.html')
+
+    @current_app.route('/userinfo/<uid>')
+    def userinfo(uid):
+        if not uid:
+            raise common.error.UserInfoNotFound("UID is not provided")
+        user_info = models.UserInfo.query.get(uid)
+        if not user_info:
+            raise common.error.UserInfoNotFound("This user hasn't provided any information. \
+                                                Or this user doesn't exist.")
+
+        return render_template('userinfo.html', user_info=user_info)
 
     # @current_app.route('/', defaults={'filename': 'home'})
     # @current_app.route('/<path:filename>')
