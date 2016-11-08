@@ -45,7 +45,7 @@ class Credential(db.Model):
         )
 
     cred_type = db.Column(db.Enum("email", "phone", "name"))
-    cred_value = db.Column(db.String(64))
+    cred_value = db.Column(db.String(64), unique=True)
     uid = db.Column(db.String(36), db.ForeignKey(Account.uid))
 
     account = db.relationship(Account,
@@ -56,12 +56,12 @@ class UserInfo(db.Model):  # 用户信息,学号部门之类的
     __tablename__ = current_app.config["TABLE_PREFIX"] + 'user_info'
 
     uid = db.Column(db.String(36), db.ForeignKey(Account.uid), primary_key=True)
-    student_id = db.Column(db.Integer)
+    student_id = db.Column(db.Integer, unique=True)
     grade = db.Column(db.String(64))
     department = db.Column(db.String(128))
     school = db.Column(db.String(128))
     major = db.Column(db.String(128))
-    qq = db.Column(db.String(64))
+    qq = db.Column(db.String(64), unique=True)
     introduction = db.Column(db.Text)
 
     account = db.relationship(Account,
@@ -77,8 +77,8 @@ class Applications(db.Model):
     grade = db.Column(db.String(64))
     school = db.Column(db.String(128))
     major = db.Column(db.String(128))
-    phone = db.Column(db.String(64))
-    qq = db.Column(db.String(64))
+    phone = db.Column(db.String(64), unique=True)
+    qq = db.Column(db.String(64), unique=True)
     department = db.Column(db.String(128))
     introduction = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)

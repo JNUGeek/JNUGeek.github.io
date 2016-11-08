@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'实现登录'
+"""实现登录"""
 
 import flask_restful as restful
 import flask_login as login
@@ -23,6 +23,7 @@ from common.error import (
 
 
 class Login(restful.Resource):
+
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('uid')
@@ -34,10 +35,6 @@ class Login(restful.Resource):
         args = parser.parse_args()
 
         account = None
-
-        md5 = hashlib.md5()
-        md5.update(args['passwd'].encode('utf-8'))
-        args['passwd'] = md5.hexdigest()
 
         if args['uid']:  # 如果有uid,也就是用户名
             account = Account.query.get(args['uid'])
@@ -56,6 +53,9 @@ class Login(restful.Resource):
 
         if not account:
             raise AtLeastOneOfArguments(['uid', 'name', 'email', 'phone'])
+
+        passwd = '%s:%s' % (account.uid, args['passwd'])
+        args['passwd'] = hashlib.md5(passwd.encode('utf-8')).hexdigest() + '+1s'
 
         if account.passwd.lower() != args['passwd'].lower():  # 检查密码对不对
             raise PasswordIncorrect()
