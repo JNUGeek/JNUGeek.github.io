@@ -201,8 +201,8 @@ class ApiTest(unittest.TestCase):
         import json
         return json.dumps(
                 obj,
-                ensure_ascii = False,
-                indent = 4
+                ensure_ascii=False,
+                indent=4
             )
 
     def record_requests(self, method, url, view, indata, response):
@@ -238,8 +238,8 @@ class ApiTest(unittest.TestCase):
 
         from flask import url_for
         response = self.client.post(
-                path = url_for("api.auth.login"),
-                data = { 'uid': account.uid, 'passwd': account.passwd }
+                path=url_for("api.auth.login"),
+                data={'uid': account.uid, 'passwd': account.passwd}
             )
         self.assertEqual(response.status_code, 200)
 
