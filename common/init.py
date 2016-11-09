@@ -106,11 +106,12 @@ def init_app():
         if not uid:
             raise common.error.UserInfoNotFound("UID is not provided")
         user_info = models.UserInfo.query.get(uid)
+        baseinfo = models.Credential.query.filter_by(uid=uid).all()
         if not user_info:
             raise common.error.UserInfoNotFound("This user hasn't provided any information. \
                                                 Or this user doesn't exist.")
 
-        return render_template('userinfo.html', user_info=user_info)
+        return render_template('userinfo.html', user_info=user_info, baseinfo=baseinfo)
 
     # @current_app.route('/', defaults={'filename': 'home'})
     # @current_app.route('/<path:filename>')
