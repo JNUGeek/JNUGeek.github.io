@@ -3,13 +3,8 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(__file__))
-
-# if sys.version_info > (2, 7):
-#    warnings.warn("Due to few flask extensions having supported Py3k, "
-#            "please check carefully if your code is fully compatible.")
-
 # prepend project root path to module search paths
+sys.path.insert(0, os.path.dirname(__file__))
 
 import inspect
 from flask import g, current_app
@@ -17,6 +12,7 @@ from flask import g, current_app
 registered_command = {}
 
 
+# 把命令注册到registered_command里面去
 def as_command(arg=""):
 
     def reg(func):
