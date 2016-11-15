@@ -25,7 +25,7 @@ class Account(restful.Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('name', required=True)
-        parser.add_argument('email', type=email_type)
+        parser.add_argument('email', type=email_type, required=True)
         parser.add_argument('phone', type=phone_type)
         parser.add_argument('passwd', type=md5_hashed_type)  # hash password before you post it
         args = parser.parse_args()

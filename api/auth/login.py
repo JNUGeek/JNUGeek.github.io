@@ -30,7 +30,7 @@ class Login(restful.Resource):
         parser.add_argument('name')
         parser.add_argument('email', type=email_type)
         parser.add_argument('phone', type=phone_type)
-        parser.add_argument('passwd', default="")
+        parser.add_argument('passwd', type=md5_hashed_type)
         parser.add_argument('remember_me', type=bool, default=False)
         args = parser.parse_args()
 

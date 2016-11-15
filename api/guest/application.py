@@ -22,7 +22,7 @@ class Application(restful.Resource):
 
         parser.add_argument('name', required=True)
         parser.add_argument('student_id', type=int, required=True)
-        parser.add_argument('grade', type=str)
+        parser.add_argument('grade', type=str, required=True)
         parser.add_argument('school', type=str, required=True)
         parser.add_argument('major', type=str, required=True)
         parser.add_argument('phone', type=phone_type, required=True)
@@ -42,7 +42,7 @@ class Application(restful.Resource):
         try:
             g.db.session.commit()
         except IntegrityError:
-            raise AccountAlreadyExists()
+            raise ApplicationAlreadyExists()
 
         return {'id': new_applicant.id}
 

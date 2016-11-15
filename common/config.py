@@ -4,7 +4,7 @@ from datetime import timedelta
 
 
 class ApiConfig:
-    APPNAME = "JNUHeek2015"
+    APPNAME = "JNUGeek2015"
     TABLE_PREFIX = "geek_"
     SECRET_KEY = "Try to make big news."
 

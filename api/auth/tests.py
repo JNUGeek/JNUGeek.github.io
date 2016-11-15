@@ -2,7 +2,6 @@ import unittest
 import werkzeug
 import hashlib
 import json
-
 from flask import current_app, url_for, session
 
 from common.models import (
@@ -26,18 +25,29 @@ class AuthTest(ApiTest):
     def setUp(self):
         super(AuthTest, self).setUp()
 
-        self.account_1 = Account(
-                passwd=hashlib.md5(b"123pass").hexdigest()
-            )
+        self.account_1 = Account()
         self.account_2 = Account()
-        self.account_3 = Account(
-                passwd=hashlib.md5(b"123").hexdigest()
-            )
+        self.account_3 = Account()
 
         self.dbsess.add(self.account_1)
         self.dbsess.add(self.account_2)
         self.dbsess.add(self.account_3)
         self.dbsess.flush()
+
+        p1 = hashlib.md5(b'123pass').hexdigest()
+        pswd = '%s:%s' % (self.account_1.uid, p1)
+        self.account_1.passwd = hashlib.md5(pswd.encode('utf-8')).hexdigest() + '+1s'
+        p2 = hashlib.md5(b'123').hexdigest()
+        pswd2 = '%s:%s' % (self.account_2.uid, p2)
+        self.account_2.passwd = hashlib.md5(pswd2.encode('utf-8')).hexdigest() + '+1s'
+        p3 = hashlib.md5(b'').hexdigest()
+        pswd3 = '%s:%s' % (self.account_3.uid, p3)
+        self.account_3.passwd = hashlib.md5(pswd3.encode('utf-8')).hexdigest() + '+1s'
+        self.dbsess.add(self.account_1)
+        self.dbsess.add(self.account_2)
+        self.dbsess.add(self.account_3)
+        self.dbsess.flush()
+
         self.dbsess.add(Credential(
                 uid=self.account_1.uid,
                 cred_type='name',
@@ -48,30 +58,6 @@ class AuthTest(ApiTest):
                 cred_type='name',
                 cred_value='patrick'
             ))
-        self.dbsess.add(MyTimetable(
-                uid=self.account_1.uid,
-                mon=1,
-                wed=1
-        ))
-        self.dbsess.add(MyTimetable(
-                uid=self.account_1.uid,
-                sat=1
-        ))
-        self.dbsess.add(MyTimetable(
-                uid=self.account_2.uid,
-                tue=1
-        ))
-        self.dbsess.add(MyTimetable(
-                uid=self.account_3.uid,
-                sun=1
-        ))
-        self.dbsess.add(Timetable(
-                mon=1,
-                wed=1
-        ))
-        self.dbsess.add(Timetable(
-                sat=1
-        ))
         self.dbsess.add(Credential(
                 uid=self.account_2.uid,
                 cred_type='name',
@@ -99,44 +85,21 @@ class AuthTest(ApiTest):
         self.dbsess.add(Applications(
                 name='paul',
                 student_id=2015000000,
+                grade='大一',
                 school='ist',
                 major='cst',
                 phone='15500000000',
+                qq='000000000',
                 department='技术组'
         ))
         self.dbsess.add(Applications(
                 name='ann',
                 student_id=2015000001,
+                grade='大二',
                 school='ist',
                 major='cst',
                 phone='15500000001',
                 department='技术组'
-        ))
-        self.dbsess.add(ApplyTime(
-            start='9.12',
-            end='10.12'
-        ))
-        self.dbsess.add(Mission(
-            id=1,
-            act_name='night',
-            act_date='5.23',
-        ))
-        self.dbsess.add(MnMember(
-            id=1,
-            uid=self.account_1.uid,
-            name='john',
-            act_content='this'
-        ))
-        self.dbsess.add(MnMember(
-            id=1,
-            uid=self.account_2.uid,
-            name='gump',
-            act_content='that'
-        ))
-        self.dbsess.add(Notification(
-            title='a title',
-            department='技术组',
-            content='get girls'
         ))
 
         self.dbsess.commit()
@@ -145,7 +108,7 @@ class AuthTest(ApiTest):
     def test_create_account(self):
         response = self.post(
                 endpoint="api.auth.account",
-                data={'name': 'bill'}
+                data={'name': 'bill', 'email': 'bill@email.com'}
             )
         data = self.load_data(response.data)
 
@@ -156,7 +119,7 @@ class AuthTest(ApiTest):
     def test_create_duplicated_account(self):
         response = self.post(
                 endpoint="api.auth.account",
-                data={'name': 'john'}
+                data={'name': 'gump', 'email': 'gump@gump.com'}
             )
         data = self.load_data(response.data)
 
@@ -164,114 +127,74 @@ class AuthTest(ApiTest):
         self.assertApiError(data, AccountAlreadyExists)
 
     @test_context
+    def test_create_lackingInfo_account(self):
+        response = self.post(
+            endpoint="api.auth.account",
+            data={'name': 'feng'}
+        )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 400)
+
+    @test_context
     def test_application(self):
         response = self.post(
                 endpoint="api.guest.application",
-                data={'name': 'paul',
-                      'student_id': 2015000000,
+                data={'name': 'peter',
+                      'student_id': 2015000002,
+                      'grade': '大一',
                       'school': 'ist',
                       'major': 'cst',
-                      'phone': '15500000000',
+                      'phone': '15500000002',
                       'department': '技术组'}
             )
         data = self.load_data(response.data)
         self.assertEqual(response.status_code, 200)
 
     @test_context
-    def test_admission(self):
-        response = self.get(
-                endpoint="api.guest.admission",
-                data={
-                      'student_id': 2015000000
-                      }
-            )
-        data = self.load_data(response.data)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['admission'], False)
-
-    @test_context
-    def test_contact(self):
-        self.login_user(self.account_1)
-        response = self.get(
-                endpoint="api.auth.contact",
-                data={'name': 'gump'}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['school'], self.account_2.user_info.school)
-        self.assertEqual(data['student_id'], self.account_2.user_info.student_id)
-
-    @test_context
-    def test_contact_not_exists(self):
-        self.login_user(self.account_1)
-        response = self.get(
-                endpoint="api.auth.contact",
-                data={'name': 'peter'}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 400)
-        self.assertApiError(data, UserInfoNotFound)
-
-    @test_context
-    def test_timetable(self):
-        self.login_user(self.account_1)
+    def test_diplicated_application(self):
         response = self.post(
-                endpoint="api.auth.timetable",
-                data={'timetable': [1, 1, 1, 1, 1, 1, 1,
-                                    0, 0, 0, 0, 0, 0, 0,
-                                    1, 1, 1, 1, 1, 1, 1,
-                                    1, 1, 1, 1, 1, 1, 1,
-                                    1, 1, 1, 1, 1, 1, 1,
-                                    1, 1, 1, 1, 1, 1, 1,
-                                    1, 1, 1, 1, 1, 1, 1,
-                                    1, 1, 1, 1, 1, 1, 1,
-                                    1, 1, 1, 1, 1, 1, 1,
-                                    1, 1, 1, 1, 1, 1, 1]
-                      }
-            )
+            endpoint="api.guest.application",
+            data={'name': 'peter',
+                  'student_id': 2015000000,
+                  'grade': '大一',
+                  'school': 'ist',
+                  'major': 'cst',
+                  'phone': '15500000002',
+                  'department': '技术组'}
+        )
         data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_get_timetable(self):
-        self.login_user(self.account_1)
-        response = self.get(
-                endpoint="api.auth.timetable",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
+        self.assertApiError(data, ApplicationAlreadyExists)
 
     @test_context
     def test_successful_login_no_password(self):
         response = self.post(
                 endpoint="api.auth.login",
-                data={'name': 'gump'}
+                data={'name': 'patrick',
+                      'passwd': hashlib.md5(b'').hexdigest()
+                      }
             )
         data = self.load_data(response.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertRegexpMatches(data["uid"], "[0-9a-z\-]{36}")
-        self.assertEqual(session["user_id"], self.account_2.uid)
+        self.assertEqual(session["user_id"], self.account_3.uid)
 
     @test_context
     def test_successful_login_with_password(self):
         response = self.post(
                 endpoint="api.auth.login",
                 data={
-                    'name': 'john',
-                    'passwd': hashlib.md5(b"123pass").hexdigest()
+                    'email': 'gump@gump.com',
+                    'passwd': hashlib.md5(b'123').hexdigest()
                 }
             )
         data = self.load_data(response.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertRegexpMatches(data["uid"], "[0-9a-z\-]{36}")
-        self.assertEqual(session["user_id"], self.account_1.uid)
+        self.assertEqual(session["user_id"], self.account_2.uid)
 
     @test_context
     def test_login_password_incorrect(self):
@@ -298,7 +221,7 @@ class AuthTest(ApiTest):
 
     @test_context
     def test_logout_user(self):
-        self.login_user(self.account_1)
+        self.login_user(self.account_1)  # 这里有问题？
         self.assertEqual(session["user_id"], self.account_1.uid)
 
         response = self.post(
@@ -310,260 +233,48 @@ class AuthTest(ApiTest):
         self.assertEqual(data['uid'], self.account_1.uid)
         self.assertNotIn("user_id", session)
 
-    @test_context
-    def test_user_info_add_new(self):
-        self.login_user(self.account_1)
-        response = self.post(
-                endpoint="api.auth.userinfo",
-                data={
-                    'student_id': 114514,
-                    'department': 'Computer Science',
-                }
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['uid'], self.account_1.uid)
-
-        self.assertEqual(self.account_1.user_info.department,
-                         'Computer Science')
-
-    @test_context
-    def test_user_info_query_self(self):
-        self.login_user(self.account_2)
-        response = self.get(
-                endpoint="api.auth.userinfo",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['school'], self.account_2.user_info.school)
-
-    @test_context
-    def test_user_info_query_others(self):
-        response = self.get(
-                endpoint="api.auth.userinfo",
-                data={
-                    'uid': self.account_2.uid,
-                }
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['school'], self.account_2.user_info.school)
-
-    @test_context
-    def test_see_applications(self):
-        response = self.get(
-                endpoint="api.admin.application",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['1']['name'], 'paul')
-
-    @test_context
-    def test_prove_applications(self):
-        response = self.post(
-                endpoint="api.admin.application",
-                data={'name': ['paul', 'ban'],
-                      'student_id': [2015000000, 2015000002],
-                      'school': ['ist', 'aaa'],
-                      'major': ['cst', 'bbb'],
-                      'phone': ['15500000000', '15500000003'],
-                      'department': ['技术组', '媒宣组']
-                      }
-            )
-        data = self.load_data(response.data)
-        print(data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_change_appliytime(self):
-        response = self.post(
-                endpoint="api.admin.applytime",
-                data={'start': '9.12',
-                      'end': '10.12'}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_see_appliytime(self):
-        response = self.get(
-                endpoint="api.admin.applytime",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['start'], '9.12')
-
-    @test_context
-    def test_post_mission(self):
-        response = self.post(
-                endpoint="api.admin.mission",
-                data={'act_name': 'newcomer\'s night',
-                      'act_date': '9.12',
-                      'name': ['gump', 'john'],
-                      'act_content': ['eat', 'sleep'],
-                      'remarks': ['', '']}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_see_mission(self):
-        self.login_user(self.account_2)
-        response = self.get(
-                endpoint="api.admin.mission",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['last'][0], 'night')
-
-    @test_context
-    def test_see_fullmission(self):  # 这里有问题,明天再来
-        self.login_user(self.account_2)
-        response = self.get(
-                endpoint="api.admin.fullmission",
-                data={'id': 1}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_see_fullmission(self):
-        self.login_user(self.account_2)
-        response = self.get(
-                endpoint="api.auth.get_mission",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_member_see_fullmn(self):
-        self.login_user(self.account_2)
-        response = self.get(
-                endpoint="api.auth.get_fullmn",
-                data={'id': 1}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_add_member(self):
-        response = self.post(
-                endpoint="api.admin.member",
-                data={'name': 'peter',
-                      'student_id': '2015000004',
-                      'grade': '大一',
-                      'school': 'ist',
-                      'major': 'se',
-                      'phone': '15500000002',
-                      }
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_see_members(self):
-        response = self.get(
-                endpoint="api.admin.member",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_delete_members(self):
-        response = self.get(
-                endpoint="api.admin.deletemember",
-                data={'student_id': 2013}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_see_timetable(self):
-        response = self.get(
-                endpoint="api.admin.timetable",
-                data={'user': 'john'}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_see_general_timetable(self):
-        response = self.get(
-                endpoint="api.admin.timetable",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_notify_with_specific_member(self):
-        response = self.post(
-                endpoint="api.admin.notify",
-                data={'title': 'party',
-                      'department': '其他',
-                      'members': ['john', 'gump'],
-                      'content': 'have fun'
-                      }
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_notify_with_department(self):
-        response = self.post(
-                endpoint="api.admin.notify",
-                data={'title': 'party',
-                      'department': '技术组',
-                      'content': 'have fun'
-                      }
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_see_notification(self):
-        response = self.get(
-                endpoint="api.admin.notify",
-                data={}
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
-
-    @test_context
-    def test_member_see_fullmn(self):
-        self.login_user(self.account_2)
-        response = self.get(
-                endpoint="api.auth.get_notification"
-            )
-        data = self.load_data(response.data)
-
-        self.assertEqual(response.status_code, 200)
+    # @test_context
+    # def test_user_info_add_new(self):
+    #     self.login_user(self.account_1)
+    #     response = self.post(
+    #             endpoint="api.auth.userinfo",
+    #             data={
+    #                 'student_id': 114514,
+    #                 'department': 'Computer Science',
+    #             }
+    #         )
+    #     data = self.load_data(response.data)
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(data['uid'], self.account_1.uid)
+    #
+    #     self.assertEqual(self.account_1.user_info.department,
+    #                      'Computer Science')
+    #
+    # @test_context
+    # def test_user_info_query_self(self):
+    #     self.login_user(self.account_2)
+    #     response = self.get(
+    #             endpoint="api.auth.userinfo",
+    #             data={}
+    #         )
+    #     data = self.load_data(response.data)
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(data['school'], self.account_2.user_info.school)
+    #
+    # @test_context
+    # def test_user_info_query_others(self):
+    #     response = self.get(
+    #             endpoint="api.auth.userinfo",
+    #             data={
+    #                 'uid': self.account_2.uid,
+    #             }
+    #         )
+    #     data = self.load_data(response.data)
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(data['school'], self.account_2.user_info.school)
 
 
 suite = unittest.TestSuite()
