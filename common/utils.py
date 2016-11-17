@@ -239,9 +239,9 @@ class ApiTest(unittest.TestCase):
 
         from flask import url_for
         response = self.client.post(
-                path=url_for("api.auth.login"),
-                data={'uid': account.uid, 'passwd': account.passwd}
-            )
+            path=url_for("api.auth.login"),
+            data={'uid': account.uid, 'passwd': account.p}
+        )
         self.assertEqual(response.status_code, 200)
 
     def open(self, method, endpoint, **kwargs):

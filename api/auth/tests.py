@@ -35,12 +35,15 @@ class AuthTest(ApiTest):
         self.dbsess.flush()
 
         p1 = hashlib.md5(b'123pass').hexdigest()
+        self.account_1.p = p1
         pswd = '%s:%s' % (self.account_1.uid, p1)
         self.account_1.passwd = hashlib.md5(pswd.encode('utf-8')).hexdigest() + '+1s'
         p2 = hashlib.md5(b'123').hexdigest()
+        self.account_2.p = p2
         pswd2 = '%s:%s' % (self.account_2.uid, p2)
         self.account_2.passwd = hashlib.md5(pswd2.encode('utf-8')).hexdigest() + '+1s'
         p3 = hashlib.md5(b'').hexdigest()
+        self.account_3.p = p3
         pswd3 = '%s:%s' % (self.account_3.uid, p3)
         self.account_3.passwd = hashlib.md5(pswd3.encode('utf-8')).hexdigest() + '+1s'
         self.dbsess.add(self.account_1)
@@ -221,8 +224,8 @@ class AuthTest(ApiTest):
 
     @test_context
     def test_logout_user(self):
-        self.login_user(self.account_1)  # 这里有问题？
-        self.assertEqual(session["user_id"], self.account_1.uid)
+        self.login_user(self.account_2)
+        self.assertEqual(session["user_id"], self.account_2.uid)
 
         response = self.post(
                 endpoint="api.auth.logout",
@@ -230,51 +233,26 @@ class AuthTest(ApiTest):
         data = self.load_data(response.data)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['uid'], self.account_1.uid)
+        self.assertEqual(data['uid'], self.account_2.uid)
         self.assertNotIn("user_id", session)
 
-    # @test_context
-    # def test_user_info_add_new(self):
-    #     self.login_user(self.account_1)
-    #     response = self.post(
-    #             endpoint="api.auth.userinfo",
-    #             data={
-    #                 'student_id': 114514,
-    #                 'department': 'Computer Science',
-    #             }
-    #         )
-    #     data = self.load_data(response.data)
-    #
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(data['uid'], self.account_1.uid)
-    #
-    #     self.assertEqual(self.account_1.user_info.department,
-    #                      'Computer Science')
-    #
-    # @test_context
-    # def test_user_info_query_self(self):
-    #     self.login_user(self.account_2)
-    #     response = self.get(
-    #             endpoint="api.auth.userinfo",
-    #             data={}
-    #         )
-    #     data = self.load_data(response.data)
-    #
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(data['school'], self.account_2.user_info.school)
-    #
-    # @test_context
-    # def test_user_info_query_others(self):
-    #     response = self.get(
-    #             endpoint="api.auth.userinfo",
-    #             data={
-    #                 'uid': self.account_2.uid,
-    #             }
-    #         )
-    #     data = self.load_data(response.data)
-    #
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(data['school'], self.account_2.user_info.school)
+    @test_context
+    def test_user_info_add_new(self):
+        self.login_user(self.account_1)
+        response = self.post(
+                endpoint="api.auth.userinfo",
+                data={
+                    'student_id': 114514,
+                    'department': 'Computer Science',
+                }
+            )
+        data = self.load_data(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['uid'], self.account_1.uid)
+
+        self.assertEqual(self.account_1.user_info.department,
+                         'Computer Science')
 
 
 suite = unittest.TestSuite()
