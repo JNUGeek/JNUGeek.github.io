@@ -111,7 +111,7 @@ class AuthTest(ApiTest):
     def test_create_account(self):
         response = self.post(
                 endpoint="api.auth.account",
-                data={'name': 'bill', 'email': 'bill@email.com'}
+                data={'name': 'bill', 'email': 'bill@email.com', 'phone':'15500000005'}
             )
         data = self.load_data(response.data)
 
@@ -122,7 +122,7 @@ class AuthTest(ApiTest):
     def test_create_duplicated_account(self):
         response = self.post(
                 endpoint="api.auth.account",
-                data={'name': 'gump', 'email': 'gump@gump.com'}
+                data={'name': 'gump', 'email': 'gump@gump.com', 'phone':'15500000004'}
             )
         data = self.load_data(response.data)
 

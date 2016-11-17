@@ -79,7 +79,6 @@ def init_app():
     import json
     import mimetypes
     import common.error
-    import flask_login as login
     import common.models as models
     from flask import render_template
 
@@ -106,7 +105,10 @@ def init_app():
         if not uid:
             raise common.error.UserInfoNotFound("UID is not provided")
         user_info = models.UserInfo.query.get(uid)
-        baseinfo = models.Credential.query.filter_by(uid=uid).all()
+        baseinfo = dict()
+        baseinfo['name'] = models.Credential.query.filter_by(uid=uid, cred_type='name').first().cred_value
+        baseinfo['email'] = models.Credential.query.filter_by(uid=uid, cred_type='email').first().cred_value
+        baseinfo['phone'] = models.Credential.query.filter_by(uid=uid, cred_type='phone').first().cred_value
         if not user_info:
             raise common.error.UserInfoNotFound("This user hasn't provided any information. \
                                                 Or this user doesn't exist.")

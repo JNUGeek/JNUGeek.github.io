@@ -26,7 +26,7 @@ class Account(restful.Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('name', required=True)
         parser.add_argument('email', type=email_type, required=True)
-        parser.add_argument('phone', type=phone_type)
+        parser.add_argument('phone', type=phone_type, required=True)
         parser.add_argument('passwd', type=md5_hashed_type)  # hash password before you post it
         args = parser.parse_args()
 
@@ -62,6 +62,11 @@ class Account(restful.Resource):
                     uid=new_account.uid
                 )
             g.db.session.add(new_phone)
+
+        new_userinfo = models.UserInfo(
+            uid=new_account.uid
+        )
+        g.db.session.add(new_userinfo)
 
         try:
             g.db.session.commit()

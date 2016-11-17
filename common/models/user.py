@@ -13,7 +13,7 @@ class Account(db.Model):  # 用户账户,用户名密码之类的
 
     uid = db.Column(db.String(36), primary_key=True,
                     default=lambda: str(uuid.uuid4()))  # 用uuid应该是为了防止用户名冲突
-    passwd = db.Column(db.String(32), default="")
+    passwd = db.Column(db.String(100), default="")
     permission = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
 
