@@ -32,8 +32,8 @@
        function perSubmit() {
  	$.ajax({
     type:"post",
-    url:"/api/guest/application/",      
-    data:$("form").serialize()        
+    url:"/api/auth/userinfo/",
+    data:$("form").serialize()
     dataType:“json”,
     error: function(request) {
     alert("注册失败，网络可能正在开小差_(:3Z)_");},
@@ -66,10 +66,10 @@
                 <ul class="nav navbar-nav navbar-right">
                     
                     <li class="page-scroll">
-                        <a href="login.html">登录</a>
+                        <a href="login">登录</a>
                     </li>
                     <li> 
-                      <a href="pre-sign.html">预报名</a>
+                      <a href="presign">预报名</a>
                     </li>
                 </ul>
             </div>
@@ -90,11 +90,11 @@
 </header>
       
 <div class="well">
-	<form class="form-horizontal" role="form" id="preSign" action="/api/guest/application/" method="post" name="application">
+	<form class="form-horizontal" role="form" id="preSign" action="/api/auth/userinfo/" method="post" name="application">
 		<div class="form-group">
 			<label class="control-label col-sm-2" for="name">姓名:</label>
 			<div class="col-sm-8">
-			<input class="form-control flat" id="name" name="name"placeholder="Enter name"></input>
+			<input class="form-control flat" id="name" name="name" placeholder="Enter name"></input>
 			</div>
 		</div>
 		<div class="form-group">

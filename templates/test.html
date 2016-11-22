@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block JavaScript %}
+<script type="text/javascript">
+       function perSubmit() {
+ 	$.ajax({
+    type:"post",
+    url:"/api/guest/application/",
+    data:$("form").serialize()
+    dataType:“json”,
+    error: function(request) {
+    alert("注册失败，网络可能正在开小差_(:3Z)_");},
+    success: function(result) {
+    alert("报名成功");
+});
+};
+
+	</script>
+{% endblock %}
+{% block content %}
+<div class="well">
+	<form class="form-horizontal" role="form" id="preSign" action="/api/guest/application/" method="post" name="application">
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="name">姓名:</label>
+			<div class="col-sm-8">
+			<input class="form-control flat" id="name" name="name"placeholder="Enter name", value={{ baseinfo['name'] if baseinfo['name'] }}></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="grade">年级:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="grade" name="grade" placeholder="Enter grade"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="school">学院:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="school" name="school" placeholder="Enter college"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="major">专业:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="major" name="major" placeholder="Enter major"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="student_id">学号:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="student_id" name="student_id" placeholder="Enter your student id"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2"  for="phone">电话:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="phone" name="phone" placeholder="Enter phone number"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="qq">QQ:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="qq" name="qq" placeholder="Enter qq number"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="department">意向部门:</label>
+			<div class="col-sm-8">
+				<input class="form-control" id="department" name="department" placeholder="Department"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="introduction">个人简介:</label>
+			<div class="col-sm-8">
+			<textarea class="form-control" rows="9" id="introduction" name="introduction" ></textarea>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-8">
+			<button type="submit" class="btn btn-primary btn-block" onclick="perSubmit()">Submit</button>
+		</div>
+		</div>
+	</form>
+</div>
+{% endblock %}

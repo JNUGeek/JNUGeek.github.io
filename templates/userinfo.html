@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ baseinfo['name'] }}的个人信息</title>
+    <title>{{ baseinfo['name'][:3] if baseinfo['name'][3]==':' }}的个人信息</title>
 </head>
 <body>
     {% for key in baseinfo %}
