@@ -1,10 +1,8 @@
 import os
 import re
 
-from flask import Blueprint
 
-
-def find_modules(init_file, fpattern = None):
+def find_modules(init_file, fpattern=None):
     """
     List names of modules in the same directory as init_file. The function is
     usually used in __init__.py and returns value fit for __all__.
@@ -14,10 +12,9 @@ def find_modules(init_file, fpattern = None):
     import pkgutil
 
     fpattern = re.compile(r"^[a-zA-Z][a-zA-Z0-9_]*$") \
-            if fpattern is None else re.compile(fpattern)
+        if fpattern is None else re.compile(fpattern)
 
     dirname = os.path.dirname(init_file)
-    parmod = os.path.dirname(dirname)
     entries = [modname for _, modname, _ in pkgutil.iter_modules([dirname])]
     entries = list(filter(lambda n: fpattern.match(n), entries))
 
@@ -206,6 +203,7 @@ class ApiTest(unittest.TestCase):
                 indent=4
             )
 
+    # 自动生成文档
     def record_requests(self, method, url, view, indata, response):
         global _RECORD_STR
         global whole_record
@@ -219,7 +217,7 @@ class ApiTest(unittest.TestCase):
             doc = ""
             if view and getattr(view, 'view_class', None):
                 doc = view.view_class.__doc__ or ""
-            whole_record[url] = [ doc ]
+            whole_record[url] = [doc]
 
         whole_record[url] += [{
                 'method': method,

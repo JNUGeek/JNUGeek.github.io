@@ -15,7 +15,7 @@ def get_blueprint():
         if hasattr(mod, "get_entries"):
             for entname, entry in mod.get_entries():  # 主要是这里面一个个的add很麻烦
                 api.add_resource(entry, join_url(modname, entname),
-                        endpoint="{}.{}".format(modname, entname))
+                                 endpoint="{}.{}".format(modname, entname))
 
     return bp
 

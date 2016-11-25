@@ -1,6 +1,3 @@
 .idea/
 
-geek/
-
-JNUGeek/
-
+*.pyc

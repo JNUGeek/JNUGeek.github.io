@@ -1,38 +1,10 @@
-
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" href="../static/css/main.css">
-	 <link href="../static/css/freelancer.css" rel="stylesheet">
-	 <link href="../static/css/flat-ui.css" rel="stylesheet">
-	 <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-	<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
--->
-	
-	
-	<script src="http://ofhwq2r7f.bkt.clouddn.com/jquery-2.2.3 (2).js"></script>
-	<script src="http://ofhwq2r7f.bkt.clouddn.com/flat-ui.js"></script>
-	<script src="http://ofhwq2r7f.bkt.clouddn.com/jquery.min.js"></script>
-	<script src="http://ofhwq2r7f.bkt.clouddn.com/respond.min.js"></script>
-	<script src="http://ofhwq2r7f.bkt.clouddn.com/html5shiv.js"></script>
-	<script src="http://ofhwq2r7f.bkt.clouddn.com/bootstrap.min.js"></script>
-	
-	<link rel="stylesheet" href="../static/css/responsive-nav.css">
-	<script src="http://ofhwq2r7f.bkt.clouddn.com/responsive-nav.min.js"></script>
-	<style type="text/css">
-	.label{font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei",华文细黑,STHeiti,MingLiu}
-	header{
-		height: 100px;
-		background: #18bc9c;
-	}
-
-	</style>
-	<script type="text/javascript">
+{% extends "base.html" %}
+{% block JavaScript %}
+<script type="text/javascript">
        function perSubmit() {
  	$.ajax({
     type:"post",
-    url:"/api/auth/userinfo/",
+    url:"/api/guest/application/",
     data:$("form").serialize()
     dataType:“json”,
     error: function(request) {
@@ -43,58 +15,14 @@
 };
 
 	</script>
-</head>
-
-<body>
-<nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                   
-                  
-                </button>
-                <a class="navbar-brand" href="#page-top">
-                  <a class="navbar-brand" href="#the top">
-                    <img src="http://ofhwq2r7f.bkt.clouddn.com/logo.png" width="140px" height="auto" >
-                  </a>
-                </a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    
-                    <li class="page-scroll">
-                        <a href="login">登录</a>
-                    </li>
-                    <li> 
-                      <a href="presign">预报名</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
-</div>
-</nav>
-<header>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-
-			</div>
-		</div>
-	</div>
-</header>
-      
+{% endblock %}
+{% block content %}
 <div class="well">
-	<form class="form-horizontal" role="form" id="preSign" action="/api/auth/userinfo/" method="post" name="application">
+	<form class="form-horizontal" role="form" id="preSign" action="/api/guest/application/" method="post" name="application">
 		<div class="form-group">
 			<label class="control-label col-sm-2" for="name">姓名:</label>
 			<div class="col-sm-8">
-			<input class="form-control flat" id="name" name="name" placeholder="Enter name"></input>
+			<input class="form-control flat" id="name" name="name"placeholder="Enter name"></input>
 			</div>
 		</div>
 		<div class="form-group">
@@ -152,18 +80,4 @@
 		</div>
 	</form>
 </div>
-<!--tanchuang-->
-<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="signResult">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <p>...</p>
-    </div>
-  </div>
-</div>
-<div class="container">
-	<div class="copy-right text-center">
-		<p>Copyright © 2016 Powered by JNUgeek All Rights Reserved.</p>
-	</div>
- </div>
-</body>
-</html>
+{% endblock %}
