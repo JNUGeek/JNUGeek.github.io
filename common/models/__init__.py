@@ -9,7 +9,8 @@ from .user import (
         NotiMember,
         MnMember,
         MyTimetable,
-        ApplyTime
+        ApplyTime,
+        CourseEvaluate
     )
 
 from .misc import Session

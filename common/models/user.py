@@ -175,3 +175,13 @@ class MnMember(db.Model):
 
     missions = db.relationship(Mission, back_populates="mn_member")
 
+
+class CourseEvaluate(db.Model):
+    __tablename__ = 'course_evaluate'
+
+    id = db.Column(db.Integer, primary_key=True)
+    course_name = db.Column(db.String(64), nullable=False)
+    course_type = db.Column(db.String(64), nullable=False)
+    teacher = db.Column(db.String(64), nullable=False)
+    evaluation = db.Column(db.String(1000), unique=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)

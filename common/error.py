@@ -75,3 +75,17 @@ class ApplicationAlreadyExists(ApiError):
 
     def __init__(self):
         self.message = "Application information is duplicated"
+
+
+class EvaluationAlreadyExists(ApiError):
+    error_code = 8
+
+    def __init__(self):
+        self.message = "Evaluation is duplicated"
+
+
+class InformationCannotBeNull(ApiError):
+    error_code = 9
+
+    def __init__(self):
+        self.message = "Information cannot be null"
