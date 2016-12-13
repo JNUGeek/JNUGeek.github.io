@@ -1,20 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ baseinfo['name'][:3] if baseinfo['name'][3]==':' }}的个人信息</title>
-</head>
-<body>
-    {% for key in baseinfo %}
-        {% if baseinfo[key] %}
-            {% if key=='name' and baseinfo[key][3]==':' %}
-                {{ key }}：{{ baseinfo[key][:3] }}<br>
-                {% elif key=='name' and baseinfo[key][2]==':'  %}
-                {{ key }}：{{ baseinfo[key][:2] }}<br>
-                {% else %}
-            {{ key }}：{{ baseinfo[key] }}<br>
-                {% endif %}
-        {% endif %}
-    {% endfor %}
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}{{ baseinfo['name'][:3] if baseinfo['name'][3]==':' else baseinfo['name'][:2] }}的个人信息{% endblock %}
+
+{% block content %}
+<div class="well">
+	<form class="form-horizontal" role="form" id="preSign" action="/api/auth/userinfo/" method="post" name="userinfo">
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="name">姓名:</label>
+			<div class="col-sm-8">
+			<input class="form-control flat" id="name" name="name" placeholder="Enter name" value="{{ baseinfo['name'][:3] if baseinfo['name'][3]==':' else baseinfo['name'][:2] }}"></input>
+			</div>
+		</div>
+
+        <div class="form-group">
+			<label class="control-label col-sm-2" for="student_id">学号:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="student_id" name="student_id" placeholder="Enter student id" value="{{ user_info['student_id'] if user_info['student_id'] else '' }}"></input>
+			</div>
+		</div>
+
+        <div class="form-group">
+			<label class="control-label col-sm-2"  for="phone">电话:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="phone" name="phone" placeholder="Enter phone number" value="{{ baseinfo['phone'] }}"></input>
+			</div>
+		</div>
+
+        <div class="form-group">
+			<label class="control-label col-sm-2"  for="email">邮箱:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="email" name="email" placeholder="Enter phone number" value="{{ baseinfo['email'] }}"></input>
+			</div>
+		</div>
+
+        <div class="form-group">
+			<label class="control-label col-sm-2" for="department">部门:</label>
+			<div class="col-sm-8">
+				<input class="form-control" id="department" name="department" placeholder="Department" value="{{ user_info['department'] if user_info['department'] else '' }}"></input>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="grade">年级:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="grade" name="grade" placeholder="Enter grade" value="{{ user_info['grade'] if user_info['grade'] else '' }}"></input>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="school">学院:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="school" name="school" placeholder="Enter college" value="{{ user_info['school'] if user_info['school'] else '' }}"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="major">专业:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="major" name="major" placeholder="Enter major" value="{{ user_info['major'] if user_info['major'] else '' }}"></input>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="qq">QQ:</label>
+			<div class="col-sm-8">
+			<input class="form-control" id="qq" name="qq" placeholder="Enter qq number" value="{{ user_info['qq'] if user_info['qq'] else '' }}"></input>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="introduction">个人简介:</label>
+			<div class="col-sm-8">
+			<textarea class="form-control" rows="9" id="introduction" name="introduction" value="{{ user_info['information'] if user_info['information'] else '' }}"></textarea>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-8">
+			<button type="submit" class="btn btn-primary btn-block">Submit</button>
+		</div>
+		</div>
+	</form>
+</div>
+{% endblock %}
