@@ -144,7 +144,6 @@ def run_command():
         exit(255)
 
 
-
 import common.init
 
 app = common.init.get_app()

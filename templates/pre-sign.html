@@ -6,8 +6,8 @@
  	$.ajax({
     type:"post",
     url:"/api/guest/application/",
-    data:$("form").serialize()
-    dataType:“json”,
+    data:$("form").serialize(),
+    dataType:"json",
     error: function(request) {
     alert("注册失败，网络可能正在开小差_(:3Z)_");},
     success: function(result) {
